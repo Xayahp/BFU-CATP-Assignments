@@ -1,8 +1,9 @@
-#ifndef OPENGLFRAMEWORK_SHADER_HPP
-#define OPENGLFRAMEWORK_SHADER_HPP
+#ifndef ASSIGNMENT_FRAMEWORK_SHADER_H
+#define ASSIGNMENT_FRAMEWORK_SHADER_H
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "Eigen/Eigen"
 
 #include <string>
 #include <fstream>
@@ -13,7 +14,7 @@ class Shader {
 public:
     unsigned int ID;
 
-    Shader(std::string vertexPath, std::string fragmentPath, std::string geometryPath = "") {
+    Shader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath = "") {
         // 1. retrieve the vertex/fragment source code from filePath
         std::string vertexCode;
         std::string fragmentCode;
@@ -57,12 +58,12 @@ public:
         unsigned int vertex, fragment;
         // vertex shader
         vertex = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex, 1, &vShaderCode, NULL);
+        glShaderSource(vertex, 1, &vShaderCode, nullptr);
         glCompileShader(vertex);
         checkCompileErrors(vertex, "VERTEX");
         // fragment Shader
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment, 1, &fShaderCode, NULL);
+        glShaderSource(fragment, 1, &fShaderCode, nullptr);
         glCompileShader(fragment);
         checkCompileErrors(fragment, "FRAGMENT");
         // if geometry shader is given, compile geometry shader
@@ -70,7 +71,7 @@ public:
         if(geometryPath.empty()) {
             const char * gShaderCode = geometryCode.c_str();
             geometry = glCreateShader(GL_GEOMETRY_SHADER);
-            glShaderSource(geometry, 1, &gShaderCode, NULL);
+            glShaderSource(geometry, 1, &gShaderCode, nullptr);
             glCompileShader(geometry);
             checkCompileErrors(geometry, "GEOMETRY");
         }
@@ -112,6 +113,10 @@ public:
     {
         glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
     }
+    void setVec2(const std::string &name, const Eigen::Vector2f &value) const
+    {
+        glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, value.data());
+    }
     void setVec2(const std::string &name, float x, float y) const
     {
         glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
@@ -120,6 +125,10 @@ public:
     void setVec3(const std::string &name, const glm::vec3 &value) const
     {
         glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+    void setVec3(const std::string &name, const Eigen::Vector3f &value) const
+    {
+        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, value.data());
     }
     void setVec3(const std::string &name, float x, float y, float z) const
     {
@@ -130,7 +139,11 @@ public:
     {
         glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
     }
-    void setVec4(const std::string &name, float x, float y, float z, float w)
+    void setVec4(const std::string &name, const Eigen::Vector4f &value) const
+    {
+        glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, value.data());
+    }
+    void setVec4(const std::string &name, float x, float y, float z, float w) const
     {
         glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
     }
@@ -139,31 +152,43 @@ public:
     {
         glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
+    void setMat2(const std::string &name, const Eigen::Matrix2f &mat) const
+    {
+        glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data());
+    }
     // ------------------------------------------------------------------------
     void setMat3(const std::string &name, const glm::mat3 &mat) const
     {
         glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+    void setMat3(const std::string &name, const Eigen::Matrix3f &mat) const
+    {
+        glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data());
     }
     // ------------------------------------------------------------------------
     void setMat4(const std::string &name, const glm::mat4 &mat) const
     {
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
+    void setMat4(const std::string &name, const Eigen::Matrix4f &mat) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data());
+    }
 private:
-    void checkCompileErrors(GLuint shader, std::string type) {
+    static void checkCompileErrors(GLuint shader, const std::string& type) {
         GLint success;
         GLchar infoLog[1024];
         if(type != "PROGRAM") {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
             if(!success) {
-                glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+                glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
                 std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }
         else {
             glGetProgramiv(shader, GL_LINK_STATUS, &success);
             if(!success) {
-                glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+                glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
                 std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
             }
         }

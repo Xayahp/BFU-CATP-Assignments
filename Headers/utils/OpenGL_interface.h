@@ -1,0 +1,101 @@
+#ifndef ASSIGNMENT_FRAMEWORK_OPENGL_INTERFACE_H
+#define ASSIGNMENT_FRAMEWORK_OPENGL_INTERFACE_H
+
+// PREREQUISITE
+#include "glad/glad.h" // [ Ensure "glad" is included ahead of "GLFW" ]
+#include "GLFW/glfw3.h"
+
+#include "Eigen/Eigen"
+#include <vector>
+#include <iostream>
+
+namespace OPENGL_INTERFACE {
+
+    const unsigned WIDTH = 800;
+    const unsigned HEIGHT = 600;
+
+    const char *WINDOW_NAME = "Assignment"; // Your Name Here :P
+
+    std::vector<Eigen::Vector2f> mouse_input_points;
+    bool printed = false;
+
+    static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
+    static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
+
+    static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
+
+    static void OPENGL_INIT(GLFWwindow *&window) {
+
+        // initialize GLFW
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+        window = glfwCreateWindow(WIDTH, HEIGHT, WINDOW_NAME, nullptr, nullptr);
+        if (window == nullptr) {
+            std::cout << "Failed to create GLFW window." << std::endl;
+            glfwTerminate();
+        }
+        glfwMakeContextCurrent(window);
+
+        // register callback functions
+        glfwSetKeyCallback(window, key_callback);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetMouseButtonCallback(window, mouse_button_callback);
+
+        // initialize GLAD
+        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+            std::cout << "Failed to initialize GLAD." << std::endl;
+            glfwTerminate(); // This line isn't in the official source code, but I think that it should be added here.
+        }
+    }
+
+    static void PROCESS_INPUT(GLFWwindow *&window) {
+        /** Keyboard control **/ // If key did not get pressed it will return GLFW_RELEASE
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, true);
+        }
+    }
+
+    static void OPENGL_CLEAR_BUFFER() {
+        glClearColor(1.f, 1.f, 1.f, 1.f);
+        glClear(GL_COLOR_BUFFER_BIT + GL_DEPTH_BUFFER_BIT);
+    }
+
+    static void OPENGL_SHUTDOWN(GLFWwindow *&window) {
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
+
+// ------------------------------ callback functions ------------------------------
+    static void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+        glViewport(0, 0, width, height);
+    }
+
+    static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+    }
+
+    static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+            double xpos, ypos;
+            //getting cursor position
+            glfwGetCursorPos(window, &xpos, &ypos);
+            xpos = 2 * xpos / (WIDTH - 1.f) - 1.f;
+            ypos = 1.f - 2 * ypos / (HEIGHT - 1.f);
+            mouse_input_points.emplace_back(Eigen::Vector2f(xpos, ypos));
+            printed = false;
+        }
+        if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+            mouse_input_points.clear();
+            std::cout << "CLEAR!" << std::endl;
+        }
+    }
+}
+#endif //OPENGLFRAMEWORK_INITIALIZE_H

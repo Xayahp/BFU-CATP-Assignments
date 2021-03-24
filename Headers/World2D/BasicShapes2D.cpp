@@ -1,14 +1,23 @@
-#include "BasicShapes.h"
+#include "BasicShapes2D.h"
 
+using namespace W2D;
+
+AABB::AABB(float xMin, float xMax, float yMin, float yMax) : x_min(xMin), x_max(xMax), y_min(yMin), y_max(yMax) {}
 
 // ------------------------------ Basic Shape 2D ------------------------------
-
 BasicShape2D::BasicShape2D(Eigen::Vector2f center) : center(std::move(center)), rotation_angle(0), draw_mode(LINES),
                                                      fixed(false), mass(1.f), velocity(Eigen::Vector2f(0.f, 0.f)),
                                                      force(Eigen::Vector2f(0.f, 0.f)) {}
 
 BasicShape2D::~BasicShape2D() {
     positions.clear();
+}
+
+void BasicShape2D::iterate(float time_step) {
+    Eigen::Vector2f acceleration = force / mass;
+    velocity += acceleration * time_step;
+    center += velocity * time_step;
+    force = Eigen::Vector2f::Zero();
 }
 
 BasicShape2D &BasicShape2D::set_color(Eigen::Vector3f &RGB) {
@@ -21,15 +30,15 @@ BasicShape2D &BasicShape2D::set_color(Eigen::Vector4f &RGBA) {
     return *this;
 }
 
-BasicShape2D &BasicShape2D::set_draw_mode(DRAW_MODE mode) {
-    draw_mode = mode;
-    return *this;
-}
-
 BasicShape2D &BasicShape2D::set_color(int HEX) {
     color[0] = ((HEX >> 16) & 0xFF) / 255.0;
     color[1] = ((HEX >> 8) & 0xFF) / 255.0;
     color[2] = ((HEX) & 0xFF) / 255.0;
+    return *this;
+}
+
+BasicShape2D &BasicShape2D::set_draw_mode(DRAW_MODE mode) {
+    draw_mode = mode;
     return *this;
 }
 
@@ -38,16 +47,8 @@ BasicShape2D &BasicShape2D::fix() {
     return *this;
 }
 
-void BasicShape2D::iterate(float time_step) {
-    Eigen::Vector2f acceleration = force / mass;
-    velocity += acceleration * time_step;
-    center += velocity * time_step;
-    force = Eigen::Vector2f::Zero();
-}
-
 
 // ------------------------------ Line ------------------------------
-
 Line::Line(Eigen::Vector2f start, Eigen::Vector2f end) : BasicShape2D((start + end) / 2.f),
                                                          start(std::move(start)), end(std::move(end)) {
     draw_mode = LINES;
@@ -91,12 +92,12 @@ void Line::do_collision(const std::vector<std::unique_ptr<BasicShape2D>> &world_
 }
 
 AABB Line::getAABB() {
-    return AABB(std::min(start.x(), end.x()), std::max(start.x(), end.x()), std::min(start.y(), end.y()), std::max(start.y(), end.y()));
+    return AABB(std::min(start.x(), end.x()), std::max(start.x(), end.x()), std::min(start.y(), end.y()),
+                std::max(start.y(), end.y()));
 }
 
 
 // ------------------------------ Rectangle ------------------------------
-
 Rectangle::Rectangle(Eigen::Vector2f center, float harf_width, float harf_height) : BasicShape2D(std::move(center)),
                                                                                     harf_width(harf_width),
                                                                                     harf_height(harf_height) {
@@ -155,9 +156,10 @@ std::vector<float> Rectangle::get_positions() {
 
 AABB Rectangle::getAABB() {
     auto a = sin(20);
-    return AABB(center.x()-harf_width, center.x()+harf_width, center.y()-harf_height, center.y()+harf_height);
+    return AABB(center.x() - harf_width, center.x() + harf_width, center.y() - harf_height, center.y() + harf_height);
 }
 
 void Rectangle::do_collision(const std::vector<std::unique_ptr<BasicShape2D>> &world_data) {
 
 }
+

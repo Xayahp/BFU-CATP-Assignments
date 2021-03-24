@@ -1,22 +1,19 @@
-#include "Scene.h"
-Scene::Scene() {
+#include "Renderer3D.h"
+
+using namespace W3D;
+
+Renderer3D::Renderer3D() {
     init_shader();
 }
 
-Scene::~Scene() {
+Renderer3D::~Renderer3D() {
     delete shader_points;
     delete shader_lines;
     delete shader_triangles;
 }
 
-void Scene::render(World2D &world) {
-    clear();
-    for (auto &&shape : world.objects) {
-        render(*shape);
-    }
-}
-
-void Scene::draw() {
+void Renderer3D::draw(std::vector<std::unique_ptr<BasicShape3D>> &objects) {
+    render(objects);
     if (!positions_points.empty())
         draw_points();
     if (!positions_lines.empty())
@@ -25,7 +22,14 @@ void Scene::draw() {
         draw_triangles();
 }
 
-void Scene::render(BasicShape2D &shape) {
+void Renderer3D::render(std::vector<std::unique_ptr<BasicShape3D>> &objects) {
+    clear();
+    for (auto &&shape : objects) {
+        render(*shape);
+    }
+}
+
+void Renderer3D::render(BasicShape3D &shape) {
     std::vector<float> pos = shape.get_positions();
     switch (shape.draw_mode) {
         case POINTS:
@@ -64,14 +68,14 @@ void Scene::render(BasicShape2D &shape) {
     }
 }
 
-void Scene::init_shader() {
+void Renderer3D::init_shader() {
     std::string PROJECT_DIRECTORY = PROJECT_SOURCE_DIR;
-    std::string vertex_points_shader_path = PROJECT_DIRECTORY + "/Shaders/" + "default_points_shader.vert";
-    std::string fragment_points_shader_path = PROJECT_DIRECTORY + "/Shaders/" + "default_points_shader.frag";
-    std::string vertex_lines_shader_path = PROJECT_DIRECTORY + "/Shaders/" + "default_lines_shader.vert";
-    std::string fragment_lines_shader_path = PROJECT_DIRECTORY + "/Shaders/" + "default_lines_shader.frag";
-    std::string vertex_triangles_shader_path = PROJECT_DIRECTORY + "/Shaders/" + "default_triangles_shader.vert";
-    std::string fragment_triangles_shader_path = PROJECT_DIRECTORY + "/Shaders/" + "default_triangles_shader.frag";
+    std::string vertex_points_shader_path = PROJECT_DIRECTORY + "/Shaders/3D/" + "default_points_shader.vert";
+    std::string fragment_points_shader_path = PROJECT_DIRECTORY + "/Shaders/3D/" + "default_points_shader.frag";
+    std::string vertex_lines_shader_path = PROJECT_DIRECTORY + "/Shaders/3D/" + "default_lines_shader.vert";
+    std::string fragment_lines_shader_path = PROJECT_DIRECTORY + "/Shaders/3D/" + "default_lines_shader.frag";
+    std::string vertex_triangles_shader_path = PROJECT_DIRECTORY + "/Shaders/3D/" + "default_triangles_shader.vert";
+    std::string fragment_triangles_shader_path = PROJECT_DIRECTORY + "/Shaders/3D/" + "default_triangles_shader.frag";
     this->shader_points = new Shader(vertex_points_shader_path, fragment_points_shader_path);
     this->shader_lines = new Shader(vertex_lines_shader_path, fragment_lines_shader_path);
     this->shader_triangles = new Shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
@@ -83,13 +87,12 @@ void Scene::init_shader() {
     glGenBuffers(2, vbo_triangles);
 }
 
-void Scene::init_points() {
-
+void Renderer3D::init_points() {
     glBindVertexArray(vao_points);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_points[0]);
     glBufferData(GL_ARRAY_BUFFER, positions_points.size() * sizeof(float), &positions_points[0], GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -108,13 +111,12 @@ void Scene::init_points() {
     glBindVertexArray(0);
 }
 
-void Scene::init_lines() {
-
+void Renderer3D::init_lines() {
     glBindVertexArray(vao_lines);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_lines[0]);
     glBufferData(GL_ARRAY_BUFFER, positions_lines.size() * sizeof(float), &positions_lines[0], GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -127,13 +129,12 @@ void Scene::init_lines() {
     glBindVertexArray(0);
 }
 
-void Scene::init_triangles() {
-
+void Renderer3D::init_triangles() {
     glBindVertexArray(vao_triangles);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_triangles[0]);
     glBufferData(GL_ARRAY_BUFFER, positions_triangles.size() * sizeof(float), &positions_triangles[0], GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -146,35 +147,35 @@ void Scene::init_triangles() {
     glBindVertexArray(0);
 }
 
-void Scene::draw_points() {
+void Renderer3D::draw_points() {
     init_points();
     shader_points->use();
     glBindVertexArray(vao_points);
     glEnable(GL_PROGRAM_POINT_SIZE);
-    glDrawArrays(GL_POINTS, 0, int(positions_points.size() / 2));
+    glDrawArrays(GL_POINTS, 0, int(positions_points.size() / 3));
     glDisable(GL_PROGRAM_POINT_SIZE);
     glBindVertexArray(0);
 }
 
-void Scene::draw_lines() {
+void Renderer3D::draw_lines() {
     init_lines();
     shader_lines->use();
     glBindVertexArray(vao_lines);
-    glDrawArrays(GL_LINES, 0, int(positions_lines.size() / 2));
+    glDrawArrays(GL_LINES, 0, int(positions_lines.size() / 3));
     glBindVertexArray(0);
 }
 
-void Scene::draw_triangles() {
+void Renderer3D::draw_triangles() {
     init_triangles();
     shader_triangles->use();
     glBindVertexArray(vao_triangles);
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDrawArrays(GL_TRIANGLES, 0, int(positions_triangles.size() / 2));
+    glDrawArrays(GL_TRIANGLES, 0, int(positions_triangles.size() / 3));
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     glBindVertexArray(0);
 }
 
-void Scene::clear() {
+void Renderer3D::clear() {
     positions_points.clear();
     positions_lines.clear();
     positions_triangles.clear();
