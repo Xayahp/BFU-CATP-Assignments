@@ -6,6 +6,7 @@
 #define ASSIGNMENT0_SCENE_H
 
 #include "BasicShapes.h"
+#include "World.h"
 #include "Shader.h"
 
 #include <vector>
@@ -18,12 +19,20 @@ public:
 
     ~Scene();
 
-    void eat(BasicShape2D &shape, DRAW_MODE mode);
+    void render(World2D &world);
 
     void draw();
 
 private:
+    void render(BasicShape2D &shape);
+
     void init_shader();
+
+    void init_points();
+
+    void init_lines();
+
+    void init_triangles();
 
     void draw_points();
 
@@ -31,15 +40,14 @@ private:
 
     void draw_triangles();
 
-    void init_lines();
-
-    void init_triangles();
+    void clear();
 
 private:
     std::vector<float> positions_points;
     std::vector<float> points_colors;
+    std::vector<float> points_size;
     unsigned int vao_points;
-    unsigned int vbo_points;
+    unsigned int vbo_points[3];
 
     std::vector<float> positions_lines;
     std::vector<float> lines_colors;

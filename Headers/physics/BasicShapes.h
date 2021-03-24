@@ -12,42 +12,100 @@ enum DRAW_MODE {
     POINTS, LINES, TRIANGLES
 };
 
-class BasicShape2D {
+struct AABB {
 
-public:
+    AABB(float xMin, float xMax, float yMin, float yMax) : x_min(xMin), x_max(xMax), y_min(yMin), y_max(yMax) {}
+
+    float x_min;
+    float x_max;
+    float y_min;
+    float y_max;
+};
+
+
+// ------------------------------ Basic Shape 2D ------------------------------
+
+class BasicShape2D {
+public:// constructor(s)
     explicit BasicShape2D(Eigen::Vector2f center);
 
-    void set_color(Eigen::Vector3f &RGB);
+    virtual ~BasicShape2D();
 
-    void set_color(Eigen::Vector4f &RGBA);
-
-    void set_draw_mode(DRAW_MODE mode);
-
-    void set_color(int HEX);
-
+public:// virtual methods
     virtual void generate_data() = 0;
 
     virtual std::vector<float> get_positions() = 0;
 
-public:
+    virtual AABB getAABB() = 0;
+
+    virtual void iterate(float time_step);
+
+    virtual void do_collision(const std::vector<std::unique_ptr<BasicShape2D> > &world_data) = 0;
+
+public:// sets
+    BasicShape2D &set_color(Eigen::Vector3f &RGB);
+
+    BasicShape2D &set_color(Eigen::Vector4f &RGBA);
+
+    BasicShape2D &set_color(int HEX);
+
+    BasicShape2D &set_draw_mode(DRAW_MODE mode);
+
+    BasicShape2D &fix();
+
+public:// interface fields
     std::vector<Eigen::Vector2f> positions;
     Eigen::Vector4f color;
     DRAW_MODE draw_mode;
-    Eigen::Vector2f center;
     float rotation_angle;
+    bool fixed;
+public:
+    // kinematics
+    Eigen::Vector2f center;
+    Eigen::Vector2f velocity;
+    Eigen::Vector2f force;
+    float mass;
 };
 
-class Rectangle : public BasicShape2D {
 
-public:
+// ------------------------------ Line ------------------------------
 
-    Rectangle(Eigen::Vector2f center, float harf_width, float harf_height);
+class Line : public BasicShape2D {
+
+public:// constructor(s)
+    Line(Eigen::Vector2f start, Eigen::Vector2f end);
 
     void generate_data() override;
 
     std::vector<float> get_positions() override;
 
+    AABB getAABB() override;
+
+    void do_collision(const std::vector<std::unique_ptr<BasicShape2D>> &world_data) override;
+
 private:
+    Eigen::Vector2f start;
+    Eigen::Vector2f end;
+};
+
+
+// ------------------------------ Rectangle ------------------------------
+
+class Rectangle : public BasicShape2D {
+
+public:// constructor(s)
+    Rectangle(Eigen::Vector2f center, float harf_width, float harf_height);
+
+public:// override(s)
+    void generate_data() override;
+
+    std::vector<float> get_positions() override;
+
+    AABB getAABB() override;
+
+    void do_collision(const std::vector<std::unique_ptr<BasicShape2D>> &world_data) override;
+
+private:// private fields
     float harf_width;
     float harf_height;
 };

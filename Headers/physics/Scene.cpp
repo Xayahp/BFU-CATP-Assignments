@@ -1,5 +1,4 @@
 #include "Scene.h"
-
 Scene::Scene() {
     init_shader();
 }
@@ -10,10 +9,25 @@ Scene::~Scene() {
     delete shader_triangles;
 }
 
-void Scene::eat(BasicShape2D &shape, DRAW_MODE mode) {
-    shape.set_draw_mode(mode);
+void Scene::render(World2D &world) {
+    clear();
+    for (auto &&shape : world.objects) {
+        render(*shape);
+    }
+}
+
+void Scene::draw() {
+    if (!positions_points.empty())
+        draw_points();
+    if (!positions_lines.empty())
+        draw_lines();
+    if (!positions_triangles.empty())
+        draw_triangles();
+}
+
+void Scene::render(BasicShape2D &shape) {
     std::vector<float> pos = shape.get_positions();
-    switch (mode) {
+    switch (shape.draw_mode) {
         case POINTS:
             positions_points.insert(positions_points.end(), pos.begin(), pos.end());
             for (int i = 0; i < int(pos.size() / 2); ++i) {
@@ -21,6 +35,9 @@ void Scene::eat(BasicShape2D &shape, DRAW_MODE mode) {
                 points_colors.emplace_back(shape.color[1]);
                 points_colors.emplace_back(shape.color[2]);
                 points_colors.emplace_back(shape.color[3]);
+            }
+            for (int i = 0; i < int(pos.size() / 2); ++i) {
+                points_size.emplace_back(5.f);
             }
             break;
         case LINES:
@@ -47,15 +64,6 @@ void Scene::eat(BasicShape2D &shape, DRAW_MODE mode) {
     }
 }
 
-void Scene::draw() {
-    if (!positions_points.empty())
-        draw_points();
-    if (!positions_lines.empty())
-        draw_lines();
-    if (!positions_triangles.empty())
-        draw_triangles();
-}
-
 void Scene::init_shader() {
     std::string PROJECT_DIRECTORY = PROJECT_SOURCE_DIR;
     std::string vertex_points_shader_path = PROJECT_DIRECTORY + "/Shaders/" + "default_points_shader.vert";
@@ -67,11 +75,40 @@ void Scene::init_shader() {
     this->shader_points = new Shader(vertex_points_shader_path, fragment_points_shader_path);
     this->shader_lines = new Shader(vertex_lines_shader_path, fragment_lines_shader_path);
     this->shader_triangles = new Shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+    glGenVertexArrays(1, &vao_points);
+    glGenBuffers(3, vbo_points);
+    glGenVertexArrays(1, &vao_lines);
+    glGenBuffers(2, vbo_lines);
+    glGenVertexArrays(1, &vao_triangles);
+    glGenBuffers(2, vbo_triangles);
+}
+
+void Scene::init_points() {
+
+    glBindVertexArray(vao_points);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_points[0]);
+    glBufferData(GL_ARRAY_BUFFER, positions_points.size() * sizeof(float), &positions_points[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_points[1]);
+    glBufferData(GL_ARRAY_BUFFER, points_colors.size() * sizeof(float), &points_colors[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_points[2]);
+    glBufferData(GL_ARRAY_BUFFER, points_size.size() * sizeof(float), &points_size[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 1 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
 }
 
 void Scene::init_lines() {
-    glGenVertexArrays(1, &vao_lines);
-    glGenBuffers(2, vbo_lines);
 
     glBindVertexArray(vao_lines);
 
@@ -91,8 +128,6 @@ void Scene::init_lines() {
 }
 
 void Scene::init_triangles() {
-    glGenVertexArrays(1, &vao_triangles);
-    glGenBuffers(2, vbo_triangles);
 
     glBindVertexArray(vao_triangles);
 
@@ -112,7 +147,13 @@ void Scene::init_triangles() {
 }
 
 void Scene::draw_points() {
-
+    init_points();
+    shader_points->use();
+    glBindVertexArray(vao_points);
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glDrawArrays(GL_POINTS, 0, int(positions_points.size() / 2));
+    glDisable(GL_PROGRAM_POINT_SIZE);
+    glBindVertexArray(0);
 }
 
 void Scene::draw_lines() {
@@ -131,4 +172,14 @@ void Scene::draw_triangles() {
     glDrawArrays(GL_TRIANGLES, 0, int(positions_triangles.size() / 2));
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     glBindVertexArray(0);
+}
+
+void Scene::clear() {
+    positions_points.clear();
+    positions_lines.clear();
+    positions_triangles.clear();
+    points_colors.clear();
+    lines_colors.clear();
+    triangles_colors.clear();
+    points_size.clear();
 }

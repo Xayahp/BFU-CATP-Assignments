@@ -20,6 +20,7 @@ if (window == NULL) {
 glfwMakeContextCurrent(window);
 
 // register callback functions
+glfwSetKeyCallback(window, key_callback);
 glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 glfwSetMouseButtonCallback(window, mouse_button_callback);
 
