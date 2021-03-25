@@ -9,10 +9,21 @@
 #include <vector>
 #include <iostream>
 
+#include "Camera.h"
+
 namespace OPENGL_INTERFACE {
 
     const unsigned WIDTH = 800;
     const unsigned HEIGHT = 600;
+
+    Camera camera(Eigen::Vector3f(0.0f, 0.0f, 3.0f));
+    float lastX = WIDTH / 2.0f;
+    float lastY = HEIGHT / 2.0f;
+    bool firstMouse = true;
+
+    // timing
+    float deltaTime = 0.0f;    // time between current frame and last frame
+    float lastFrame = 0.0f;
 
     const char *WINDOW_NAME = "Assignment"; // Your Name Here :P
 
@@ -23,7 +34,11 @@ namespace OPENGL_INTERFACE {
 
     static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
+    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
     static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
+
+    static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
     static void OPENGL_INIT(GLFWwindow *&window) {
 
@@ -46,20 +61,37 @@ namespace OPENGL_INTERFACE {
         // register callback functions
         glfwSetKeyCallback(window, key_callback);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetCursorPosCallback(window, mouse_callback);
+        glfwSetScrollCallback(window, scroll_callback);
         glfwSetMouseButtonCallback(window, mouse_button_callback);
+
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // initialize GLAD
         if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
             std::cout << "Failed to initialize GLAD." << std::endl;
             glfwTerminate(); // This line isn't in the official source code, but I think that it should be added here.
         }
+
+        glEnable(GL_DEPTH_TEST);
     }
 
     static void PROCESS_INPUT(GLFWwindow *&window) {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
         /** Keyboard control **/ // If key did not get pressed it will return GLFW_RELEASE
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
         }
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            camera.ProcessKeyboard(FORWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            camera.ProcessKeyboard(BACKWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            camera.ProcessKeyboard(LEFT, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            camera.ProcessKeyboard(RIGHT, deltaTime);
     }
 
     static void OPENGL_CLEAR_BUFFER() {
@@ -96,6 +128,26 @@ namespace OPENGL_INTERFACE {
             mouse_input_points.clear();
             std::cout << "CLEAR!" << std::endl;
         }
+    }
+
+    static void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+        if (firstMouse) {
+            lastX = xpos;
+            lastY = ypos;
+            firstMouse = false;
+        }
+
+        float xoffset = xpos - lastX;
+        float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+        lastX = xpos;
+        lastY = ypos;
+
+        camera.ProcessMouseMovement(xoffset, yoffset);
+    }
+
+    static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+        camera.ProcessMouseScroll(yoffset);
     }
 }
 #endif //OPENGLFRAMEWORK_INITIALIZE_H

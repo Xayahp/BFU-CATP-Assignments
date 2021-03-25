@@ -1,17 +1,16 @@
+// STB IMAGE IMPLEMENTATION
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#endif
 // INTERFACE
 #include "OpenGL_interface.h"
 #include "Imgui_interface.h"
+// UTILS
+#include "Model.h"
 
-#include <glm/gtx/string_cast.hpp>
+#include "glm/gtx/string_cast.hpp"
 
-// USER HEADERS
-#include "World2D.h"
-#include "World3D.h"
-
-// _TEST
-#include "_test_scenes.h"
-
-using namespace W3D;
+#include "BasicShapes.h"
 
 int main(int argc, char **argv) {
 
@@ -19,13 +18,33 @@ int main(int argc, char **argv) {
     OPENGL_INTERFACE::OPENGL_INIT(window);
     IMGUI_INTERFACE::IMGUI_CREATE(window);
 
-//    World2D world(Eigen::Vector2f(0, -0.000098f));
-//    TEST_SCENE::scene01(world);
+    std::string SHADER_DIRECTORY = PROJECT_SHADER_DIR;
+    std::string vertex_triangles_shader_path = SHADER_DIRECTORY + "/3D/" + "default_triangles_shader.vert";
+    std::string fragment_triangles_shader_path = SHADER_DIRECTORY + "/3D/" + "default_triangles_shader.frag";
 
-    World3D world(Eigen::Vector3f(0, -0.000098f, 0.f));
-    auto cube = std::make_unique<Cuboid>(Eigen::Vector3f(0.f, 0.f, 0.f), 0.2f, 0.2f, 0.2f);
-    cube->set_color(0x4d4398).set_draw_mode(W3D::TRIANGLES);
-    world.add(std::move(cube));
+    auto plane = std::make_unique<Plane>();
+    plane->load_shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+
+    auto sphere = std::make_unique<Sphere>();
+    sphere->load_shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+
+    auto cube = std::make_unique<Cube>();
+    cube->load_shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+
+    auto cylinder = std::make_unique<Cylinder>();
+    cylinder->load_shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+
+    auto cone = std::make_unique<Cone>();
+    cone->load_shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+
+    auto corner_ball = std::make_unique<Corner_ball>();
+    corner_ball->load_shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+
+    auto torus = std::make_unique<Torus>();
+    torus->load_shader(vertex_triangles_shader_path, fragment_triangles_shader_path);
+
+    sphere->set_draw_mode(POINT);
+
 
 
 
@@ -36,29 +55,46 @@ int main(int argc, char **argv) {
 
 // ------------------------------ RENDERING LOOP FIELD ------------------------------
 
+        glm::mat4 p = glm::perspective(glm::radians(OPENGL_INTERFACE::camera.Zoom), (float)OPENGL_INTERFACE::WIDTH / (float)OPENGL_INTERFACE::HEIGHT, 0.1f, 100.0f);
+        glm::mat4 v = OPENGL_INTERFACE::camera.GetViewMatrix();
+        glm::mat4 m = glm::mat4(1.f);
+        m = glm::scale(m, glm::vec3( 0.5f, 0.5f, 0.5f ));
+        m = glm::rotate(m, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        m = glm::rotate(m, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 1.0f));
+        m = glm::rotate(m, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        Eigen::Matrix4f model, view, projection;
+
+        for (size_t i = 0; i < 4; ++i) {
+            for (size_t j = 0; j < 4; ++j) {
+                model(j, i) = m[i][j];
+                view(j, i) = v[i][j];
+                projection(j, i) = p[i][j];
+            }
+        }
+
+//        plane->set_MVP(model, view, projection);
+//        plane->draw();
+
+        sphere->set_MVP(model, view, projection);
+        sphere->draw();
+//
+//        cube->set_MVP(model, view, projection);
+//        cube->draw();
+//
+//        cylinder->set_MVP(model, view, projection);
+//        cylinder->draw();
+//
+//        torus->set_MVP(model, view, projection);
+//        torus->draw();
 
 
 
 
 
 
-//        if (!OPENGL_INTERFACE::mouse_input_points.empty()) {
-//            for (Eigen::Vector2f &p : OPENGL_INTERFACE::mouse_input_points) {
-//                auto temp = std::make_unique<Rectangle>(p, 0.1f, 0.1f);
-//                temp->set_color(0x4d4398).set_draw_mode(LINES);
-//                world.add(std::move(temp));
-//            }
-//            OPENGL_INTERFACE::mouse_input_points.clear();
-//        }
 
 
-
-
-
-
-
-        world.solve();
-        world.display();
 
 
 
