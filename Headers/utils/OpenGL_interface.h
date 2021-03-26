@@ -7,6 +7,7 @@
 
 #include "Eigen/Eigen"
 #include <vector>
+#include <string>
 #include <iostream>
 
 #include "Camera.h"
@@ -16,7 +17,8 @@ namespace OPENGL_INTERFACE {
     const unsigned WIDTH = 800;
     const unsigned HEIGHT = 600;
 
-    Camera camera(Eigen::Vector3f(0.0f, 0.0f, 10.0f));
+//    Camera camera({0.0f, 5.0f, 10.0f});
+    Camera camera({0.0f, 0.f, 3.f});
     float lastX = WIDTH / 2.0f;
     float lastY = HEIGHT / 2.0f;
     bool firstMouse = true;
@@ -25,16 +27,51 @@ namespace OPENGL_INTERFACE {
     float deltaTime = 0.0f;    // time between current frame and last frame
     float lastFrame = 0.0f;
 
-    const char *WINDOW_NAME = "Assignment"; // Your Name Here :P
+    std::string WINDOW_NAME = "SET YOUR WINDOW NAME IN OPENGL_INTERFACE::WINDOW_NAME";
 
     std::vector<Eigen::Vector2f> mouse_input_points;
     bool printed = false;
+
+    static Eigen::Matrix4f GET_PROJECTION_MATRIX() {
+        glm::mat4 p = glm::perspective(glm::radians(OPENGL_INTERFACE::camera.Zoom),
+                                       (float) OPENGL_INTERFACE::WIDTH / (float) OPENGL_INTERFACE::HEIGHT, 0.1f,
+                                       100.0f);
+        Eigen::Matrix4f projection;
+
+        for (size_t i = 0; i < 4; ++i)
+            for (size_t j = 0; j < 4; ++j)
+                projection(j, i) = p[i][j];
+
+        return projection;
+    }
+
+    static Eigen::Matrix4f GET_ORTHO_MATRIX() {
+        glm::mat4 p = glm::ortho(0.0f, float(WIDTH), float(HEIGHT), 0.0f, -1.0f, 1.0f);
+        Eigen::Matrix4f projection;
+
+        for (size_t i = 0; i < 4; ++i)
+            for (size_t j = 0; j < 4; ++j)
+                projection(j, i) = p[i][j];
+
+        return projection;
+    }
+
+    static Eigen::Matrix4f GET_VIEW_MATRIX() {
+        glm::mat4 v = OPENGL_INTERFACE::camera.GetViewMatrix();
+        Eigen::Matrix4f view;
+
+        for (size_t i = 0; i < 4; ++i)
+            for (size_t j = 0; j < 4; ++j)
+                view(j, i) = v[i][j];
+
+        return view;
+    }
 
     static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
     static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
-    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+    static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 
     static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 
@@ -51,7 +88,7 @@ namespace OPENGL_INTERFACE {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, WINDOW_NAME, nullptr, nullptr);
+        window = glfwCreateWindow(WIDTH, HEIGHT, WINDOW_NAME.c_str(), nullptr, nullptr);
         if (window == nullptr) {
             std::cout << "Failed to create GLFW window." << std::endl;
             glfwTerminate();
@@ -112,6 +149,9 @@ namespace OPENGL_INTERFACE {
     static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
+        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+            // do something
+            ;
     }
 
     static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {

@@ -36,21 +36,26 @@ void Mesh::draw(Shader &shader) const {
     glBindVertexArray(VAO);
 
     switch (draw_mode) {
+        case LINE:
+            glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0);
+            break;
         case POINT:
             glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
             glPointSize(7.f);
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
             break;
         case POLYGON:
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
             break;
         case FILL:
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
             break;
         default:
             break;
     }
 
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBindVertexArray(0);
 
@@ -111,23 +116,54 @@ void Model::draw(Shader &shader) {
         meshe.draw(shader);
 }
 
-void Model::load_model(std::string const &path, bool _gamma) {
-    gamma = _gamma;
-    Assimp::Importer importer;
-    // read file via ASSIMP
-    const aiScene *scene = importer.ReadFile(path,
-                                             aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs |
-                                             aiProcess_CalcTangentSpace);
-    // check for errors
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-    {
-        std::clog << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-        return;
-    }
-    // retrieve the directory path of the filepath
-    this->directory = path.substr(0, path.find_last_of('/'));
+void Model::load_model(std::string const &path, bool is_3D, bool _gamma) {
+    if (is_3D) {
+        gamma = _gamma;
+        Assimp::Importer importer;
+        // read file via ASSIMP
+        const aiScene *scene = importer.ReadFile(path,
+                                                 aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+                                                 aiProcess_FlipUVs |
+                                                 aiProcess_CalcTangentSpace);
+        // check for errors
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+        {
+            std::clog << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+            return;
+        }
+        // retrieve the directory path of the filepath
+        this->directory = path.substr(0, path.find_last_of('/'));
 
-    process_node(scene->mRootNode, scene);
+        process_node(scene->mRootNode, scene);
+    } else {
+        std::ifstream in(path, std::ios::in);
+        if (!in)
+            std::cerr << "Cannot open " << path << std::endl;
+        std::string line;
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
+        while (std::getline(in, line)) {
+            if (line.substr(0, 2) == "v ") {
+                std::istringstream v(line.substr(2));
+                float x, y;
+                v >> x;
+                v >> y;
+                Vertex vertex;
+                vertex.position = Eigen::Vector3f(x, y, 0.f);
+                vertices.push_back(vertex);
+            } else if (line.substr(0, 2) == "l ") {
+                std::istringstream v(line.substr(2));
+                unsigned int start, end;
+                v >> start;
+                v >> end;
+                indices.push_back(start);
+                indices.push_back(end);
+            }
+        }
+        if (!vertices.empty() && !indices.empty()) {
+            meshes.emplace_back(Mesh(vertices, indices));
+        }
+    }
 }
 
 void Model::process_node(aiNode *node, const aiScene *scene) {

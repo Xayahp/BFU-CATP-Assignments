@@ -1,15 +1,14 @@
 #include "Camera.h"
 
-Camera::Camera(Eigen::Vector3f position, Eigen::Vector3f up, float yaw, float pitch) :
-        Camera(glm::vec3(position.x(), position.y(), position.z()), glm::vec3(up.x(), up.y(), up.z()), yaw, pitch) {}
-
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
                                                                            MovementSpeed(SPEED),
                                                                            MouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
+    assert(position.z >= 0.f);
+
     Position = position;
     WorldUp = up;
-    Yaw = yaw;
-    Pitch = pitch;
+    Yaw = -90.f - 180 / 3.1415926f * atan(position.x / position.z);
+    Pitch = -180 / 3.1415926f * atan(position.y / sqrt(position.x * position.x + position.z * position.z));
     updateCameraVectors();
 }
 

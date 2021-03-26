@@ -17,9 +17,19 @@
 
 
 enum DRAW_MODE {
+    // 2D
+    LINE,
+    // 3D
     POINT,
     POLYGON,
     FILL
+};
+
+enum TEXTURE_TYPE {
+    TEXTURE_DIFFUSE,
+    TEXTURE_SPECULAR,
+    TEXTURE_NORMAL,
+    TEXTURE_HEIGHT
 };
 
 struct Vertex {
@@ -43,7 +53,7 @@ public:
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures = {});
 
     void draw(Shader &shader) const;
 
@@ -68,7 +78,7 @@ public:
     std::string directory;
     bool gamma = false;
 
-    void load_model(std::string const &path, bool _gamma = false);
+    void load_model(std::string const &path, bool is_3D = true, bool _gamma = false);
 
     void draw(Shader &shader);
 
