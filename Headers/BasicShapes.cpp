@@ -51,11 +51,11 @@ void AABB::update(float xMin, float xMax, float yMin, float yMax, float zMin, fl
 BasicShape::BasicShape(const std::string &name) : name(name) {
     load_model(fetch_obj_model_by_name(name));
     std::string SHADER_DIRECTORY = PROJECT_SHADER_DIR;
-    std::string vertex_triangles_shader_path = SHADER_DIRECTORY + "/" + "AABB.vert";
-    std::string fragment_triangles_shader_path = SHADER_DIRECTORY + "/" + "AABB.frag";
+    std::string vertex_triangles_shader_path = SHADER_DIRECTORY + "/" + "AABB_default.vert";
+    std::string fragment_triangles_shader_path = SHADER_DIRECTORY + "/" + "AABB_default.frag";
     shader_aabb = std::make_unique<Shader>(vertex_triangles_shader_path, fragment_triangles_shader_path);
 
-    float x_min = 0.f, x_max = 0.f, y_min = 0.f, y_max = 0.f, z_min = 0.f, z_max = 0.f;
+    float x_min = 1.f, x_max = -1.f, y_min = 1.f, y_max = -1.f, z_min = 1.f, z_max = -1.f;
     aabb = std::make_unique<AABB>(x_min, x_max, y_min, y_max, z_min, z_max);
 }
 
@@ -69,16 +69,26 @@ void BasicShape::load_shader(const std::string &vertexPath, const std::string &f
     this->shader = std::make_unique<Shader>(vertexPath, fragmentPath, geometryPath);
 }
 
-void BasicShape::set_MVP(Eigen::Matrix4f &_model, Eigen::Matrix4f &_view, Eigen::Matrix4f &_projection) {
-    this->model = _model;
+void BasicShape::set_projection(Eigen::Matrix4f &_projection) {
     this->shader->use();
     this->shader->setMat4("projection", _projection);
+    this->shader_aabb->use();
+    this->shader->setMat4("projection", _projection);
+}
+
+void BasicShape::set_view(Eigen::Matrix4f &_view) {
+    this->shader->use();
     this->shader->setMat4("view", _view);
+    this->shader_aabb->use();
+    this->shader->setMat4("view", _view);
+}
+
+void BasicShape::set_model(Eigen::Matrix4f &_model) {
+    this->model = _model;
+    this->shader->use();
     this->shader->setMat4("model", _model);
     this->shader_aabb->use();
-    this->shader_aabb->setMat4("projection", _projection);
-    this->shader_aabb->setMat4("view", _view);
-    this->shader_aabb->setMat4("model", Eigen::Matrix4f::Identity());
+    this->shader->setMat4("model", Eigen::Matrix4f::Identity());
 }
 
 void BasicShape::draw() {
@@ -89,23 +99,23 @@ void BasicShape::draw() {
 }
 
 void BasicShape::update_AABB() {
-    float x_min = 0.f, x_max = 0.f, y_min = 0.f, y_max = 0.f, z_min = 0.f, z_max = 0.f;
+    float x_min = std::numeric_limits<float>::infinity(), x_max = -std::numeric_limits<float>::infinity(), y_min = std::numeric_limits<float>::infinity(), y_max = -std::numeric_limits<float>::infinity(), z_min = std::numeric_limits<float>::infinity(), z_max = -std::numeric_limits<float>::infinity();
     for (auto &mesh : meshes) {
         for (auto &vertex: mesh.vertices) {
             Eigen::Vector4f real_position =
                     model * Eigen::Vector4f(vertex.position.x(), vertex.position.y(), vertex.position.z(), 1.f);
             real_position /= real_position.w();
-            if (real_position.x() < x_min)
+            if (real_position.x() <= x_min)
                 x_min = real_position.x();
-            if (real_position.x() > x_max)
+            if (real_position.x() >= x_max)
                 x_max = real_position.x();
-            if (real_position.y() < y_min)
+            if (real_position.y() <= y_min)
                 y_min = real_position.y();
-            if (real_position.y() > y_max)
+            if (real_position.y() >= y_max)
                 y_max = real_position.y();
-            if (real_position.z() < z_min)
+            if (real_position.z() <= z_min)
                 z_min = real_position.z();
-            if (real_position.z() > z_max)
+            if (real_position.z() >= z_max)
                 z_max = real_position.z();
         }
     }

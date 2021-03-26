@@ -25,7 +25,7 @@ file(GLOB OTHER_SOURCES
         "vendor/imgui-1.82/*.cpp")
 file(GLOB SOME_SAMPLES "Samples/*.h" "Samples/*.cpp")
 # -------------------------------------------------------------------------------
-set(TEST_TARGET "src/main.cpp")
+set(TEST_TARGET "src/main.cpp" Headers/PhysicalObjects.cpp Headers/PhysicalObjects.h)
 add_executable(AssignmentSample ${TEST_TARGET} ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLES})
 target_include_directories(AssignmentSample
         PUBLIC

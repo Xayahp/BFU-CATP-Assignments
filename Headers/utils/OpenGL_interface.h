@@ -16,7 +16,7 @@ namespace OPENGL_INTERFACE {
     const unsigned WIDTH = 800;
     const unsigned HEIGHT = 600;
 
-    Camera camera(Eigen::Vector3f(0.0f, 0.0f, 3.0f));
+    Camera camera(Eigen::Vector3f(0.0f, 0.0f, 10.0f));
     float lastX = WIDTH / 2.0f;
     float lastY = HEIGHT / 2.0f;
     bool firstMouse = true;

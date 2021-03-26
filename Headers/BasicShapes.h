@@ -25,26 +25,32 @@ class BasicShape : public Model {
 protected:
     explicit BasicShape(const std::string &name);
 
-public:
-    void
-    load_shader(const std::string &vertexPath, const std::string &fragmentPath, const std::string &geometryPath = "");
-
-    void set_MVP(Eigen::Matrix4f &_model, Eigen::Matrix4f &_view, Eigen::Matrix4f &_projection);
-
+public: // DRAW INTERFACE
     void draw();
 
-private:
+    void load_shader(const std::string &vertexPath, const std::string &fragmentPath, const std::string &geometryPath = "");
+
+    void set_projection(Eigen::Matrix4f &_projection);
+
+    void set_view(Eigen::Matrix4f &_view);
+
+    void set_model(Eigen::Matrix4f &_model);
+
+public:
     static std::string fetch_obj_model_by_name(const std::string &obj_filename);
 
+    const std::string name;
+
+    std::unique_ptr<Shader> shader;
+    Eigen::Matrix4f model;
+
+private: // AABB INTERFACE
     void draw_AABB();
 
     void update_AABB();
 
-private:
-    std::unique_ptr<Shader> shader, shader_aabb;
+    std::unique_ptr<Shader> shader_aabb;
     std::unique_ptr<AABB> aabb;
-    const std::string name;
-    Eigen::Matrix4f model;
 };
 
 
