@@ -18,23 +18,14 @@ enum AABB_TYPE {
     AABB_3D
 };
 
-class AABB {
-public:
-    AABB(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax, AABB_TYPE type = AABB_3D);
-
-    void update(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
-
-    std::unique_ptr<Mesh> aabb_mesh;
-    float x_min, x_max, y_min, y_max, z_min, z_max;
-    AABB_TYPE type;
-};
-
+class AABB;
 
 class BasicShape : public Model {
-protected:
+protected: // -------------------- CONSTRUCTOR(S) --------------------
     explicit BasicShape(const std::string &name, SHAPE_TYPE type = SHAPE_3D);
 
-public: // DRAW INTERFACE
+
+public: // -------------------- DRAW INTERFACE --------------------
     void draw();
 
     void load_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
@@ -50,14 +41,17 @@ public: // DRAW INTERFACE
 
     bool DRAW_AABB = false;
 
+
 public:
     SHAPE_TYPE type;
     const std::string name;
     std::unique_ptr<Shader> shader;
-    Eigen::Matrix4f model;
+    Eigen::Matrix4f model, view, projection;
+    Eigen::Matrix4f ortho;
 
-private: // AABB INTERFACE
-    void init_aabb(AABB_TYPE type);
+
+private: // -------------------- AABB INTERFACE --------------------
+    void init_aabb(AABB_TYPE aabb_type);
 
     void load_aabb_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
                           const std::string &geometry_shader_name = "");
@@ -71,63 +65,17 @@ private: // AABB INTERFACE
 };
 
 
-// ------------------------------ 2D shapes ------------------------------
-class Line : public BasicShape {
+// ------------------------------ AABB CLASS ------------------------------
+class AABB {
 public:
-    Line();
+    AABB(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax, AABB_TYPE type = AABB_3D);
+
+    void update(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
+
+    std::unique_ptr<Mesh> aabb_mesh;
+    float x_min, x_max, y_min, y_max, z_min, z_max;
+    AABB_TYPE type;
 };
 
-class Circle : public BasicShape {
-public:
-    Circle();
-};
-
-class Rectangle : public BasicShape {
-public:
-    Rectangle();
-};
-
-
-// ------------------------------ 3D shapes ------------------------------
-class Plane : public BasicShape {
-public:
-    Plane();
-};
-
-
-class Cube : public BasicShape {
-public:
-    Cube();
-};
-
-
-class Sphere : public BasicShape {
-public:
-    Sphere();
-};
-
-
-class Cylinder : public BasicShape {
-public:
-    Cylinder();
-};
-
-
-class Cone : public BasicShape {
-public:
-    Cone();
-};
-
-
-class Corner_ball : public BasicShape {
-public:
-    Corner_ball();
-};
-
-
-class Torus : public BasicShape {
-public:
-    Torus();
-};
 
 #endif //ASSIGNMENT_FRAMEWORK_BASICSHAPE_H

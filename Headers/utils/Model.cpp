@@ -36,6 +36,12 @@ void Mesh::draw(Shader &shader) const {
     glBindVertexArray(VAO);
 
     switch (draw_mode) {
+        case POINT_2D: // TODO: fix this
+            glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+            glPointSize(10.f);
+            glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
+            glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+            break;
         case LINE:
             glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0);
             break;
@@ -108,6 +114,8 @@ void Mesh::update_mesh() {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
     glBindVertexArray(0);
 }
 
@@ -142,6 +150,7 @@ void Model::load_model(std::string const &path, bool is_3D, bool _gamma) {
         std::string line;
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
+        int i = 0;
         while (std::getline(in, line)) {
             if (line.substr(0, 2) == "v ") {
                 std::istringstream v(line.substr(2));
@@ -158,6 +167,12 @@ void Model::load_model(std::string const &path, bool is_3D, bool _gamma) {
                 v >> end;
                 indices.push_back(start);
                 indices.push_back(end);
+            } else if (line.substr(0, 2) == "vt") {
+                std::istringstream v(line.substr(2));
+                float t_u, t_v;
+                v >> t_u;
+                v >> t_v;
+                vertices[i++].tex_coord = Eigen::Vector2f(t_u, t_v);
             }
         }
         if (!vertices.empty() && !indices.empty()) {

@@ -18,6 +18,7 @@
 
 enum DRAW_MODE {
     // 2D
+    POINT_2D,
     LINE,
     // 3D
     POINT,

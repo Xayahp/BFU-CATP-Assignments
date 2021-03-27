@@ -14,6 +14,8 @@
 
 namespace OPENGL_INTERFACE {
 
+    bool scene_state = 1;
+
     const unsigned WIDTH = 800;
     const unsigned HEIGHT = 600;
 
@@ -45,17 +47,6 @@ namespace OPENGL_INTERFACE {
         return projection;
     }
 
-    static Eigen::Matrix4f GET_ORTHO_MATRIX() {
-        glm::mat4 p = glm::ortho(0.0f, float(WIDTH), float(HEIGHT), 0.0f, -1.0f, 1.0f);
-        Eigen::Matrix4f projection;
-
-        for (size_t i = 0; i < 4; ++i)
-            for (size_t j = 0; j < 4; ++j)
-                projection(j, i) = p[i][j];
-
-        return projection;
-    }
-
     static Eigen::Matrix4f GET_VIEW_MATRIX() {
         glm::mat4 v = OPENGL_INTERFACE::camera.GetViewMatrix();
         Eigen::Matrix4f view;
@@ -68,8 +59,6 @@ namespace OPENGL_INTERFACE {
     }
 
     static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-
-    static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
     static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 
@@ -96,7 +85,6 @@ namespace OPENGL_INTERFACE {
         glfwMakeContextCurrent(window);
 
         // register callback functions
-        glfwSetKeyCallback(window, key_callback);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
         glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetScrollCallback(window, scroll_callback);
@@ -118,9 +106,8 @@ namespace OPENGL_INTERFACE {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         /** Keyboard control **/ // If key did not get pressed it will return GLFW_RELEASE
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
-        }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             camera.ProcessKeyboard(FORWARD, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -129,6 +116,8 @@ namespace OPENGL_INTERFACE {
             camera.ProcessKeyboard(LEFT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             camera.ProcessKeyboard(RIGHT, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+            scene_state = !scene_state;
     }
 
     static void OPENGL_CLEAR_BUFFER() {
@@ -144,14 +133,6 @@ namespace OPENGL_INTERFACE {
 // ------------------------------ callback functions ------------------------------
     static void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
         glViewport(0, 0, width, height);
-    }
-
-    static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, true);
-        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-            // do something
-            ;
     }
 
     static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {

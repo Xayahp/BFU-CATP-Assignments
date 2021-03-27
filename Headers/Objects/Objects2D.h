@@ -1,0 +1,57 @@
+#ifndef ASSIGNMENT_FRAMEWORK_OBJECTS2D_H
+#define ASSIGNMENT_FRAMEWORK_OBJECTS2D_H
+
+#include "Shapes2D.h"
+
+#include "PhysicalObjects.h"
+
+class Wall : public Line, public BasicPhysicalObjects {
+public:
+    Wall(float width);
+
+    void update() override;
+
+    void draw() override;
+
+    void set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) override;
+
+    void set_ortho(const Eigen::Matrix4f &ortho) override;
+
+private:
+    float width;
+};
+
+class Brick : public Rectangle, public BasicPhysicalObjects {
+public:
+    Brick(float width, float height);
+
+    void update() override;
+
+    void draw() override;
+
+    void set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) override;
+
+    void set_ortho(const Eigen::Matrix4f &ortho) override;
+
+private:
+    float width;
+    float height;
+};
+
+class Pizza : public Circle, public BasicPhysicalObjects {
+public:
+    Pizza(float radius);
+
+    void update() override;
+
+    void draw() override;
+
+    void set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) override;
+
+    void set_ortho(const Eigen::Matrix4f &ortho) override;
+
+public:
+    float radius;
+};
+
+#endif //ASSIGNMENT_FRAMEWORK_OBJECTS2D_H

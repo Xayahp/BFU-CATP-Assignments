@@ -3,15 +3,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #endif
 
+// USER HEADERS
+#include "Scene01.h"
+#include "Scene02.h"
+
 // LOAD INTERFACE
 #include "OpenGL_interface.h"
 #include "Imgui_interface.h"
 
-// USER HEADERS
-#include "Scene01.h"
-
 int main(int argc, char **argv) {
-
     /* --------------------------------------------------
      *           Initialize the Rendering System
      * -------------------------------------------------- */
@@ -22,11 +22,11 @@ int main(int argc, char **argv) {
     IMGUI_INTERFACE::IMGUI_CREATE(window);
 
     /* --------------------------------------------------
-     *           Load Game here !
+     *           Load Scenes here !
      * -------------------------------------------------- */
 
-    Scene01 scene;
-    scene.load();
+    std::unique_ptr<SceneTEMPLATE> scene = std::make_unique<Scene02>(OPENGL_INTERFACE::WIDTH, OPENGL_INTERFACE::HEIGHT, true);
+    scene->load();
 
     /* --------------------------------------------------
      *           Rendering Loop here
@@ -37,11 +37,13 @@ int main(int argc, char **argv) {
         OPENGL_INTERFACE::PROCESS_INPUT(window);
         OPENGL_INTERFACE::OPENGL_CLEAR_BUFFER();
 
-        scene.view = OPENGL_INTERFACE::GET_VIEW_MATRIX();
-        scene.projection = OPENGL_INTERFACE::GET_PROJECTION_MATRIX();
-        scene.render();
+        scene->view = OPENGL_INTERFACE::GET_VIEW_MATRIX();
+        scene->projection = OPENGL_INTERFACE::GET_PROJECTION_MATRIX();
+        scene->render(OPENGL_INTERFACE::deltaTime);
 
-        IMGUI_INTERFACE::hello_imgui();
+        scene->scene_state = OPENGL_INTERFACE::scene_state ? STATE_ACTIVE : STATE_PAUSE;
+
+//        IMGUI_INTERFACE::hello_imgui();
         glfwSwapBuffers(window);
     }
 

@@ -1,16 +1,8 @@
 #include "Scene01.h"
 
-
-Scene01::~Scene01() {
-    for (std::unique_ptr<BasicPhysicalObjects> &obj : objects)
-        obj.reset(nullptr);
-}
-
 void Scene01::init() {}
 
 void Scene01::load() {
-
-
     auto plane = std::make_unique<Plane>();
     plane->load_shader("default_shader_3D.vert", "default_shader_3D.frag");
 
@@ -46,25 +38,13 @@ void Scene01::load() {
     ball->set_position(Eigen::Vector3f(0.f, 10.f, 0.f));
     ball->set_draw_mode(POLYGON);
 
-    auto brick = std::make_unique<Brick>(0.2, 0.2);
-    brick->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
-    brick->set_position(Eigen::Vector3f(-0.5f, 1.f, 0.f));
-
-
-    auto pizza = std::make_unique<Pizza>(0.2);
-    pizza->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
-    pizza->set_position(Eigen::Vector3f(0.5f, 1.f, 0.f));
-
-//    this->objects.push_back(std::move(ground));
-//    this->objects.push_back(std::move(ball));
-    this->objects.push_back(std::move(brick));
-    this->objects.push_back(std::move(pizza));
+    this->objects.push_back(std::move(ground));
+    this->objects.push_back(std::move(ball));
 }
 
 void Scene01::update() {}
 
-void Scene01::render() {
-
+void Scene01::render(float delta_time) {
     for (auto &obj : objects) {
         obj->set_vp(view, projection);
         obj->draw();
