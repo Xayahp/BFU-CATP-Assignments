@@ -73,7 +73,7 @@ It's alternative to build by minGW/cygwin on windows yourself.
 
 ## Samples
 
-
+- [x] can this display?
 
 ## Reference
 
