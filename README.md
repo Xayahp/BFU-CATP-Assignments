@@ -32,11 +32,14 @@ This framework is designed as the course assignments of Computer Animation, Theo
 
 ### Dependency
 
-- **UI:** [glfw](https://www.glfw.org), [imgui](https://github.com/ocornut/imgui)
-- **OpenGL Loading:** [glad](https://glad.dav1d.de)(built in)
-- **Math:** [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)(built in), [glm](https://github.com/g-truc/glm)(built in)
-- **Texture Loading:** [stb](https://github.com/nothings/stb)(built in)
-- **Model Loading:** [assimp](http://assimp.org)
+- [x] [glad](https://glad.dav1d.de)
+- [x] [stb](https://github.com/nothings/stb)
+
+- [x] [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [x] [glm](https://github.com/g-truc/glm)
+- [ ] [glfw](https://www.glfw.org)
+- [ ] [imgui](https://github.com/ocornut/imgui)
+- [ ] [assimp](http://assimp.org)
 
 ## Build
 
