@@ -1,6 +1,6 @@
 # BFU-CATP Assignments Framework
 
-[![MIT License](https://img.shields.io/badge/licence-MIT-brightgreen)]()[![Latest Release](https://img.shields.io/badge/Latest Release-0.7.1-blue)]()
+[![MIT License](https://img.shields.io/badge/licence-MIT-brightgreen)]()[![Latest Release](https://img.shields.io/badge/Latest_Release-0.7.1-blue)]()
 
 ## Introduction
 
