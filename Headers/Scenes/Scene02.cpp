@@ -6,32 +6,60 @@ void Scene02::init() {
 
 void Scene02::load() {
 
+    std::string SHADER_DIRECTORY = PROJECT_SHADER_DIR;
+    std::string v_path = SHADER_DIRECTORY + "/" + "default_shader_2D.vert";
+    std::string f_path = SHADER_DIRECTORY + "/" + "default_shader_2D.frag";
+
+    std::shared_ptr<Shader> default_shader_2D = std::make_shared<Shader>(v_path, f_path);
+
     auto ground = std::make_unique<Brick>(800, 50);
-    ground->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
+//    ground->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
+
+
+    ground->shader = default_shader_2D;
+
+
     ground->set_draw_mode(POLYGON);
     ground->set_position(Eigen::Vector3f(400, 595, 0));
     ground->as_triangle();
     ground->is_fixed = true;
 
     auto brick = std::make_unique<Brick>(20, 50);
-    brick->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
+    brick->shader = default_shader_2D;
+//    brick->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
     brick->set_position(Eigen::Vector3f(400, 300, 0.f));
 
     auto pizza = std::make_unique<Pizza>(25);
-    pizza->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
+    pizza->shader = default_shader_2D;
+//    pizza->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
     pizza->set_position(Eigen::Vector3f(600, 200, 0.f));
     pizza->v = Eigen::Vector3f(-100, 0, 0);
 
     auto wall = std::make_unique<Wall>(800);
-    wall->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
+    wall->shader = default_shader_2D;
+//    wall->load_shader("default_shader_2D.vert", "default_shader_2D.frag");
     wall->set_position(Eigen::Vector3f(400, 575, 0.f));
     wall->is_fixed = true;
 
 
-//    this->objects.push_back(std::move(ground));
-    this->objects.push_back(std::move(brick));
-    this->objects.push_back(std::move(pizza));
-    this->objects.push_back(std::move(wall));
+
+
+    this->objects.push_back(std::move(ground));
+//    this->objects.push_back(std::move(brick));
+//    this->objects.push_back(std::move(pizza));
+//    this->objects.push_back(std::move(wall));
+
+
+
+
+    Fireworks2D fireworks;
+
+    for (auto &p : fireworks.pizzas) {
+        p->shader = default_shader_2D;
+        p->as_triangle();
+        p->set_draw_mode(FILL);
+        this->objects.push_back(std::move(p));
+    }
 }
 
 void Scene02::update() {

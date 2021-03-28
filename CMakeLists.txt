@@ -12,7 +12,7 @@ option(ASSIMP_BUILD_SAMPLES OFF)
 option(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/assimp-5.0.1)
 # -------------------------------------------------------------------------------
-file(GLOB PROJECT_HEADERS "Headers/*.h" "Headers/*.hpp" "Headers/*.cpp" "Headers/Shapes/*.h" "Headers/Shapes/*.hpp" "Headers/Shapes/*.cpp" "Headers/Objects/*.h" "Headers/Objects/*.hpp" "Headers/Objects/*.cpp" "Headers/Solvers/*.hpp" "Headers/Solvers/*.cpp")
+file(GLOB PROJECT_HEADERS "Headers/*.h" "Headers/*.hpp" "Headers/*.cpp" "Headers/Shapes/*.h" "Headers/Shapes/*.hpp" "Headers/Shapes/*.cpp" "Headers/Objects/*.h" "Headers/Objects/*.hpp" "Headers/Objects/*.cpp" "Headers/Solvers/*.hpp" "Headers/Solvers/*.cpp" "Headers/ParticleSystem/*.hpp" "Headers/ParticleSystem/*.cpp")
 file(GLOB PROJECT_UTILS "Headers/utils/*.h" "Headers/utils/*.hpp" "Headers/utils/*.cpp")
 file(GLOB OTHER_SOURCES
         "include/glad/glad.c"
@@ -25,7 +25,7 @@ file(GLOB OTHER_SOURCES
         "vendor/imgui-1.82/*.cpp")
 file(GLOB SOME_SAMPLE_SCENES "Headers/Scenes/*.h" "Headers/Scenes/*.cpp")
 # -------------------------------------------------------------------------------
-set(TEST_TARGET "src/main.cpp" Headers/Solvers/EluerSolver.cpp Headers/Solvers/EluerSolver.h Headers/Scenes/Scene03.cpp Headers/Scenes/Scene03.h)
+set(TEST_TARGET "src/main.cpp")
 add_executable(AssignmentSample ${TEST_TARGET} ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES})
 target_include_directories(AssignmentSample
         PUBLIC
@@ -34,6 +34,7 @@ target_include_directories(AssignmentSample
         ${PROJECT_SOURCE_DIR}/Headers/utils
         ${PROJECT_SOURCE_DIR}/Headers/Shapes
         ${PROJECT_SOURCE_DIR}/Headers/Objects
+        ${PROJECT_SOURCE_DIR}/Headers/ParticleSystem
         ${PROJECT_SOURCE_DIR}/Headers/Solvers
         ${PROJECT_SOURCE_DIR}/Headers/Scenes
         ${PROJECT_SOURCE_DIR}/vendor/assimp-5.0.1/include

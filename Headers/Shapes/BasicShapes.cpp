@@ -16,6 +16,7 @@ BasicShape::BasicShape(const std::string &name, SHAPE_TYPE type) : name(name), t
     model = Eigen::Matrix4f::Identity();
     view = Eigen::Matrix4f::Identity();
     projection = Eigen::Matrix4f::Identity();
+    color = Eigen::Vector4f(0.0f, 0.5f, 0.7f, 1.0f);
 }
 
 void BasicShape::load_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
@@ -57,6 +58,10 @@ void BasicShape::load_texture(const std::string &texture_name, TEXTURE_TYPE text
     this->meshes[0].textures.push_back(tex);
 }
 
+void BasicShape::set_color(const Eigen::Vector4f &_color) {
+    this->color = _color;
+}
+
 void BasicShape::set_projection(const Eigen::Matrix4f &_projection) {
     this->projection = _projection;
 }
@@ -74,8 +79,9 @@ void BasicShape::draw() {
     this->shader->setMat4("projection", projection);
     this->shader->setMat4("view", view);
     this->shader->setMat4("model", ortho * model);
+    this->shader->setVec4("color", color);
     Model::draw(*this->shader);
-    DRAW_AABB = true;
+//    DRAW_AABB = true;
     if (DRAW_AABB) {
         this->shader_aabb->use();
         this->shader_aabb->setMat4("projection", projection);

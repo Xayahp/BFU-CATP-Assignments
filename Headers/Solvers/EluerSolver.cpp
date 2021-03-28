@@ -30,7 +30,7 @@ void EluerSolver::SemiBackwardEuler(std::unique_ptr<BasicPhysicalObjects> &obj,
             if (obj->x.y() > 550.f) {
                 obj->x.y() = 549.999f;
                 obj->v.y() = -0.45 * obj->v.y();
-                std::cout << "[" << obj->v.x() << ", " << obj->v.y() << ", " << obj->v.z() << "]" << std::endl;
+//                std::cout << "[" << obj->v.x() << ", " << obj->v.y() << ", " << obj->v.z() << "]" << std::endl;
             }
             if (obj->x.y() > 549.901f && obj->x.y() < 550.090f) {
                 obj->v.x() = 0.99 * obj->v.x();

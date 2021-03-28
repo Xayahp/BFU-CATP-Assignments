@@ -26,12 +26,14 @@ protected: // -------------------- CONSTRUCTOR(S) --------------------
 
 
 public: // -------------------- DRAW INTERFACE --------------------
-    void draw();
+    virtual void draw();
 
     void load_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
                      const std::string &geometry_shader_name = "");
 
     void load_texture(const std::string &texturePath, TEXTURE_TYPE = TEXTURE_DIFFUSE);
+
+    void set_color(const Eigen::Vector4f &_color);
 
     void set_projection(const Eigen::Matrix4f &_projection);
 
@@ -45,10 +47,10 @@ public: // -------------------- DRAW INTERFACE --------------------
 public:
     SHAPE_TYPE type;
     const std::string name;
-    std::unique_ptr<Shader> shader;
+    std::shared_ptr<Shader> shader;
+    Eigen::Vector4f color;
     Eigen::Matrix4f model, view, projection;
     Eigen::Matrix4f ortho;
-
 
 private: // -------------------- AABB INTERFACE --------------------
     void init_aabb(AABB_TYPE aabb_type);
