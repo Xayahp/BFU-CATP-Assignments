@@ -1,6 +1,6 @@
 # BFU-CATP Assignments Framework
 
-[![MIT License](https://img.shields.io/badge/licence-MIT-brightgreen)]()[![Latest Release](https://img.shields.io/badge/Latest_Release-0.7.1-blue)]()
+[![MIT License](https://img.shields.io/badge/licence-MIT-brightgreen)]()    [![Latest Release](https://img.shields.io/badge/Latest_Release-0.7.1-blue)]()
 
 ## Introduction
 
@@ -34,9 +34,9 @@ This framework is designed as the course assignments of Computer Animation, Theo
 
 - **UI:** [glfw](https://www.glfw.org), [imgui](https://github.com/ocornut/imgui)
 - **OpenGL Loading:** [glad](https://glad.dav1d.de)(built in)
-- **Math: **[Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)(built in), [glm](https://github.com/g-truc/glm)(built in)
+- **Math:** [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)(built in), [glm](https://github.com/g-truc/glm)(built in)
 - **Texture Loading:** [stb](https://github.com/nothings/stb)(built in)
-- **Model Loading: **[assimp](http://assimp.org)
+- **Model Loading:** [assimp](http://assimp.org)
 
 ## Build
 
