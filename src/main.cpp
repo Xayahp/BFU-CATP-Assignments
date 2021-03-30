@@ -12,6 +12,7 @@
 #include "Imgui_interface.h"
 
 int main(int argc, char **argv) {
+
     /* --------------------------------------------------
      *           Initialize the Rendering System
      * -------------------------------------------------- */
@@ -25,7 +26,8 @@ int main(int argc, char **argv) {
      *           Load Scenes here !
      * -------------------------------------------------- */
 
-    std::unique_ptr<SceneTEMPLATE> scene = std::make_unique<Scene02>(OPENGL_INTERFACE::WIDTH, OPENGL_INTERFACE::HEIGHT, true);
+    std::unique_ptr<SceneTEMPLATE> scene = std::make_unique<Scene02>(OPENGL_INTERFACE::WIDTH, OPENGL_INTERFACE::HEIGHT,
+                                                                     true);
     scene->load();
 
     /* --------------------------------------------------
@@ -42,6 +44,12 @@ int main(int argc, char **argv) {
         scene->render(OPENGL_INTERFACE::deltaTime);
 
         scene->scene_state = OPENGL_INTERFACE::scene_state ? STATE_ACTIVE : STATE_PAUSE;
+
+        if (OPENGL_INTERFACE::reset) {
+            OPENGL_INTERFACE::reset = false;
+            scene->update();
+            std::cout << "reset" << std::endl;
+        }
 
 //        IMGUI_INTERFACE::hello_imgui();
         glfwSwapBuffers(window);

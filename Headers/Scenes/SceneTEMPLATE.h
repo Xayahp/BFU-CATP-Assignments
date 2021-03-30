@@ -6,7 +6,7 @@
 #include "Objects2D.h"
 #include "Objects3D.h"
 
-#include "EluerSolver.h"
+#include "EulerSolver.h"
 
 #include <vector>
 
@@ -47,6 +47,7 @@ public:
     unsigned int height;
 
     std::vector<std::unique_ptr<BasicPhysicalObjects>> objects;
+    std::vector<std::unique_ptr<BasicPhysicalObjects>> init_objects;
 
     Eigen::Matrix4f view, projection, ortho;
 };

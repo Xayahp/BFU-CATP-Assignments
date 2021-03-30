@@ -52,7 +52,7 @@ public:
     Eigen::Matrix4f model, view, projection;
     Eigen::Matrix4f ortho;
 
-private: // -------------------- AABB INTERFACE --------------------
+public: // -------------------- AABB INTERFACE --------------------
     void init_aabb(AABB_TYPE aabb_type);
 
     void load_aabb_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
@@ -63,7 +63,7 @@ private: // -------------------- AABB INTERFACE --------------------
     void update_AABB();
 
     std::unique_ptr<Shader> shader_aabb;
-    std::unique_ptr<AABB> aabb;
+    std::shared_ptr<AABB> aabb;
 };
 
 

@@ -81,6 +81,7 @@ void BasicShape::draw() {
     this->shader->setMat4("model", ortho * model);
     this->shader->setVec4("color", color);
     Model::draw(*this->shader);
+    update_AABB();
 //    DRAW_AABB = true;
     if (DRAW_AABB) {
         this->shader_aabb->use();
@@ -93,7 +94,7 @@ void BasicShape::draw() {
 
 void BasicShape::init_aabb(AABB_TYPE aabb_type) {
     float x_min = 1.f, x_max = -1.f, y_min = 1.f, y_max = -1.f, z_min = 1.f, z_max = -1.f;
-    aabb = std::make_unique<AABB>(x_min, x_max, y_min, y_max, z_min, z_max, aabb_type);
+    aabb = std::make_shared<AABB>(x_min, x_max, y_min, y_max, z_min, z_max, aabb_type);
 }
 
 void BasicShape::load_aabb_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
@@ -134,7 +135,6 @@ void BasicShape::update_AABB() {
 }
 
 void BasicShape::draw_AABB() {
-    update_AABB();
     aabb->aabb_mesh->draw(*shader_aabb);
 }
 

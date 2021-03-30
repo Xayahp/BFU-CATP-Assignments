@@ -25,23 +25,23 @@ file(GLOB OTHER_SOURCES
         "vendor/imgui-1.82/*.cpp")
 file(GLOB SOME_SAMPLE_SCENES "Headers/Scenes/*.h" "Headers/Scenes/*.cpp")
 # -------------------------------------------------------------------------------
-set(TEST_TARGET "src/main.cpp")
+set(TEST_TARGET "src/main.cpp" Headers/Collision/Collision.cpp Headers/Collision/Collision.h)
 add_executable(AssignmentSample ${TEST_TARGET} ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES})
 target_include_directories(AssignmentSample
-        PUBLIC
+        PRIVATE
         ${PROJECT_SOURCE_DIR}/include
-        ${PROJECT_SOURCE_DIR}/Headers
         ${PROJECT_SOURCE_DIR}/Headers/utils
         ${PROJECT_SOURCE_DIR}/Headers/Shapes
         ${PROJECT_SOURCE_DIR}/Headers/Objects
         ${PROJECT_SOURCE_DIR}/Headers/ParticleSystem
         ${PROJECT_SOURCE_DIR}/Headers/Solvers
+        ${PROJECT_SOURCE_DIR}/Headers/Collision
         ${PROJECT_SOURCE_DIR}/Headers/Scenes
         ${PROJECT_SOURCE_DIR}/vendor/assimp-5.0.1/include
         ${PROJECT_SOURCE_DIR}/vendor/glfw-3.3.2/include
         ${PROJECT_SOURCE_DIR}/vendor/imgui-1.82
 )
-target_link_libraries(AssignmentSample PUBLIC glfw assimp)
+target_link_libraries(AssignmentSample PRIVATE glfw assimp)
 # -------------------------------------------------------------------------------
 add_definitions(-DGLFW_INCLUDE_NONE
                 -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\"

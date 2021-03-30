@@ -1,10 +1,10 @@
-# BFU-CATP Assignments Framework
+# HinaPE
 
 [![MIT License](https://img.shields.io/badge/licence-MIT-brightgreen)]()    [![Latest Release](https://img.shields.io/badge/Latest_Release-0.7.1-blue)]()
 
 ## Introduction
 
-This is a dead simple rendering and physics framework for physically based modeling and animation.
+HinaPE is a dead simple rendering and physics framework for physically based modeling and animation.
 
 This framework is designed as the course assignments of Computer Animation, Theory and Practice.
 
@@ -30,7 +30,7 @@ This framework is designed as the course assignments of Computer Animation, Theo
 - support shader loading
 - support camera
 
-### Dependency
+### Dependencies
 
 - [x] [glad](https://glad.dav1d.de)
 - [x] [stb](https://github.com/nothings/stb)
@@ -75,8 +75,6 @@ $ open ./AssignmentSample.sln
 It's alternative to build by minGW/cygwin on windows yourself.
 
 ## Samples
-
-- [x] can this display?
 
 ## Reference
 

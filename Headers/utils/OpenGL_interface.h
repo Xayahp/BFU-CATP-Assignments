@@ -16,6 +16,8 @@ namespace OPENGL_INTERFACE {
 
     bool scene_state = 1;
 
+    bool reset = false;
+
     const unsigned WIDTH = 800;
     const unsigned HEIGHT = 600;
 
@@ -118,6 +120,8 @@ namespace OPENGL_INTERFACE {
             camera.ProcessKeyboard(RIGHT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
             scene_state = !scene_state;
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+            reset = true;
     }
 
     static void OPENGL_CLEAR_BUFFER() {
