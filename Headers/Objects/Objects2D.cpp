@@ -107,13 +107,19 @@ Eigen::Matrix4f Pizza::get_model() {
 }
 
 std::shared_ptr<AABB> &Wall::get_aabb() {
+    update();
+    Wall::update_AABB();
     return Wall::aabb;
 }
 
 std::shared_ptr<AABB> &Brick::get_aabb() {
+    update();
+    Brick::update_AABB();
     return Brick::aabb;
 }
 
 std::shared_ptr<AABB> &Pizza::get_aabb() {
+    update();
+    Pizza::update_AABB();
     return Pizza::aabb;
 }

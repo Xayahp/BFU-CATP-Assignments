@@ -64,7 +64,7 @@ void Scene02::load() {
 
     this->objects.push_back(std::move(ground));
     this->objects.push_back(std::move(brick));
-    this->objects.push_back(std::move(pizza));
+//    this->objects.push_back(std::move(pizza));
 //    this->objects.push_back(std::move(wall));
 
 
