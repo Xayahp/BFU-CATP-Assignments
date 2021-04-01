@@ -33,7 +33,11 @@ public: // -------------------- DRAW INTERFACE --------------------
 
     void load_texture(const std::string &texturePath, TEXTURE_TYPE = TEXTURE_DIFFUSE);
 
-    void set_color(const Eigen::Vector4f &_color);
+    void set_color(const Eigen::Vector3f &RGB);
+
+    void set_color(const Eigen::Vector4f &RGBA);
+
+    void set_color(const int HEX, float opacity = 1.f);
 
     void set_projection(const Eigen::Matrix4f &_projection);
 

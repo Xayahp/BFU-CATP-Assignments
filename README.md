@@ -6,6 +6,8 @@
 
 HinaPE is a dead simple rendering and physics framework for physically based modeling and animation.
 
+![avatar](./images/output.gif)
+
 This framework is designed as the course assignments of Computer Animation, Theory and Practice.
 
 ## Features

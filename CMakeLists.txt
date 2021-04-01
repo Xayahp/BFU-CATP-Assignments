@@ -25,7 +25,7 @@ file(GLOB OTHER_SOURCES
         "vendor/imgui-1.82/*.cpp")
 file(GLOB SOME_SAMPLE_SCENES "Headers/Scenes/*.h" "Headers/Scenes/*.cpp")
 # -------------------------------------------------------------------------------
-set(TEST_TARGET "src/main.cpp" Headers/Collision/Collision.cpp Headers/Collision/Collision.h)
+set(TEST_TARGET "src/main.cpp" Headers/Collision/Collision.cpp Headers/Collision/Collision.h Headers/Scenes/HelloHina.cpp Headers/Scenes/HelloHina.h)
 add_executable(AssignmentSample ${TEST_TARGET} ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES})
 target_include_directories(AssignmentSample
         PRIVATE

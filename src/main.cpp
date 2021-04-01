@@ -6,6 +6,7 @@
 // USER HEADERS
 #include "Scene01.h"
 #include "Scene02.h"
+#include "HelloHina.h"
 
 // LOAD INTERFACE
 #include "OpenGL_interface.h"
@@ -18,7 +19,8 @@ int main(int argc, char **argv) {
      * -------------------------------------------------- */
 
     GLFWwindow *window;
-    OPENGL_INTERFACE::WINDOW_NAME = "Your Name Here :P";
+//    OPENGL_INTERFACE::WINDOW_NAME = "Your Name Here :P";
+    OPENGL_INTERFACE::WINDOW_NAME = "Hello Hina~";
     OPENGL_INTERFACE::OPENGL_INIT(window);
     IMGUI_INTERFACE::IMGUI_CREATE(window);
 
@@ -26,7 +28,7 @@ int main(int argc, char **argv) {
      *           Load Scenes here !
      * -------------------------------------------------- */
 
-    std::unique_ptr<SceneTEMPLATE> scene = std::make_unique<Scene02>(OPENGL_INTERFACE::WIDTH, OPENGL_INTERFACE::HEIGHT,
+    std::unique_ptr<SceneTEMPLATE> scene = std::make_unique<HelloHina>(OPENGL_INTERFACE::WIDTH, OPENGL_INTERFACE::HEIGHT,
                                                                      true);
     scene->load();
 
@@ -44,12 +46,6 @@ int main(int argc, char **argv) {
         scene->render(OPENGL_INTERFACE::deltaTime);
 
         scene->scene_state = OPENGL_INTERFACE::scene_state ? STATE_ACTIVE : STATE_PAUSE;
-
-        if (OPENGL_INTERFACE::reset) {
-            OPENGL_INTERFACE::reset = false;
-            scene->update();
-            std::cout << "reset" << std::endl;
-        }
 
 //        IMGUI_INTERFACE::hello_imgui();
         glfwSwapBuffers(window);

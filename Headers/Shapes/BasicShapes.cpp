@@ -16,7 +16,8 @@ BasicShape::BasicShape(const std::string &name, SHAPE_TYPE type) : name(name), t
     model = Eigen::Matrix4f::Identity();
     view = Eigen::Matrix4f::Identity();
     projection = Eigen::Matrix4f::Identity();
-    color = Eigen::Vector4f(0.0f, 0.5f, 0.7f, 1.0f);
+    set_color(0x5a4498);
+//    color = Eigen::Vector4f(0.0f, 0.5f, 0.7f, 1.0f);
 }
 
 void BasicShape::load_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
@@ -58,8 +59,19 @@ void BasicShape::load_texture(const std::string &texture_name, TEXTURE_TYPE text
     this->meshes[0].textures.push_back(tex);
 }
 
-void BasicShape::set_color(const Eigen::Vector4f &_color) {
-    this->color = _color;
+void BasicShape::set_color(const Eigen::Vector3f &RGB) {
+    this->color = Eigen::Vector4f(RGB.x() / 255.f, RGB.y() / 255.f, RGB.z() / 255.f, 1.f);
+}
+
+void BasicShape::set_color(const Eigen::Vector4f &RGBA) {
+    this->color = Eigen::Vector4f(RGBA.x() / 255.f, RGBA.y() / 255.f, RGBA.z() / 255.f, RGBA.z());
+}
+
+void BasicShape::set_color(const int HEX, float opacity) {
+    this->color[0] = ((HEX >> 16) & 0xFF) / 255.f;
+    this->color[1] = ((HEX >> 8) & 0xFF) / 255.f;
+    this->color[2] = ((HEX) & 0xFF) / 255.f;
+    this->color[3] = opacity;
 }
 
 void BasicShape::set_projection(const Eigen::Matrix4f &_projection) {

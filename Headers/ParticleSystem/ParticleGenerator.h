@@ -19,10 +19,9 @@ public:
     float lifetime;
 };
 
-
 class PointParticleGenerator {
 public:
-    PointParticleGenerator(Eigen::Vector3f _point_position = Eigen::Vector3f(400, 300, 0)) : point_position(
+    PointParticleGenerator(Eigen::Vector3f _point_position = Eigen::Vector3f(400, 0, 0)) : point_position(
             std::move(_point_position)) {}
 
     Particle rand_one_time() {

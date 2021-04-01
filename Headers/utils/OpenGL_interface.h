@@ -92,7 +92,7 @@ namespace OPENGL_INTERFACE {
         glfwSetScrollCallback(window, scroll_callback);
         glfwSetMouseButtonCallback(window, mouse_button_callback);
 
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // initialize GLAD
         if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {

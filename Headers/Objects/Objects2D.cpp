@@ -85,7 +85,6 @@ Eigen::Matrix4f Wall::get_model() {
     return translation * rotation * scale;
 }
 
-
 Eigen::Matrix4f Brick::get_model() {
     Eigen::Matrix4f translation = Eigen::Matrix4f::Identity();
     translation(0, 3) = x.x();

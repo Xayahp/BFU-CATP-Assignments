@@ -46,14 +46,14 @@ void Collision::naive_aabb_collison(const std::unique_ptr<BasicPhysicalObjects> 
                 switch (direction) {
                     case TOP_LEFT:
                         if (dist_x21 < dist_y21) {
-                            float temp_f = dist_y12 / delta_x;
+                            float temp_f = dist_x21 / delta_x;
                             if (temp_f > optimal_f) {
                                 axis = AXIS_X;
                                 dist = dist_x21;
                                 optimal_f = temp_f;
                             }
                         } else {
-                            float temp_f = dist_y12 / delta_y;
+                            float temp_f = dist_y21 / delta_y;
                             if (temp_f > optimal_f) {
                                 axis = AXIS_Y;
                                 dist = dist_y21;
@@ -63,7 +63,7 @@ void Collision::naive_aabb_collison(const std::unique_ptr<BasicPhysicalObjects> 
                         break;
                     case BOTTOM_LEFT:
                         if (dist_x21 < dist_y12) {
-                            float temp_f = dist_y12 / delta_x;
+                            float temp_f = dist_x21 / delta_x;
                             if (temp_f > optimal_f) {
                                 axis = AXIS_X;
                                 dist = dist_x21;
@@ -80,14 +80,14 @@ void Collision::naive_aabb_collison(const std::unique_ptr<BasicPhysicalObjects> 
                         break;
                     case TOP_RIGHT:
                         if (dist_x12 < dist_y21) {
-                            float temp_f = dist_y12 / delta_x;
+                            float temp_f = dist_x12 / delta_x;
                             if (temp_f > optimal_f) {
                                 axis = AXIS_X;
                                 dist = dist_x12;
                                 optimal_f = temp_f;
                             }
                         } else {
-                            float temp_f = dist_y12 / delta_y;
+                            float temp_f = dist_y21 / delta_y;
                             if (temp_f > optimal_f) {
                                 axis = AXIS_Y;
                                 dist = dist_y21;
@@ -97,7 +97,7 @@ void Collision::naive_aabb_collison(const std::unique_ptr<BasicPhysicalObjects> 
                         break;
                     case BOTTOM_RIGHT:
                         if (dist_x12 < dist_y12) {
-                            float temp_f = dist_y12 / delta_x;
+                            float temp_f = dist_x12 / delta_x;
                             if (temp_f > optimal_f) {
                                 axis = AXIS_X;
                                 dist = dist_x12;
