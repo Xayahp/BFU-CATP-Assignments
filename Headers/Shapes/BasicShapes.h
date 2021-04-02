@@ -28,27 +28,29 @@ protected: // -------------------- CONSTRUCTOR(S) --------------------
 public: // -------------------- DRAW INTERFACE --------------------
     virtual void draw();
 
+    /* load a shader to a certain shape */
     void load_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
                      const std::string &geometry_shader_name = "");
 
+    /* load a texture to a certain shape */
     void load_texture(const std::string &texturePath, TEXTURE_TYPE = TEXTURE_DIFFUSE);
 
+    /* set colors by different paras */
     void set_color(const Eigen::Vector3f &RGB);
 
     void set_color(const Eigen::Vector4f &RGBA);
 
     void set_color(const int HEX, float opacity = 1.f);
 
+    /* set shader paras */
     void set_projection(const Eigen::Matrix4f &_projection);
 
     void set_view(const Eigen::Matrix4f &_view);
 
     void set_model(const Eigen::Matrix4f &_model);
 
-    bool DRAW_AABB = false;
-
-
 public:
+    bool DRAW_AABB = false;
     SHAPE_TYPE type;
     const std::string name;
     std::shared_ptr<Shader> shader;

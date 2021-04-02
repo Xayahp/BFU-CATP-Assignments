@@ -1,15 +1,14 @@
-#include "Scene02.h"
+#include "Scene_sample2D_01.h"
 
-void Scene02::init() {
+void Scene_sample2D_01::init() {
 
 }
 
-void Scene02::load() {
+void Scene_sample2D_01::load() {
 
     std::string SHADER_DIRECTORY = PROJECT_SHADER_DIR;
     std::string v_path = SHADER_DIRECTORY + "/" + "default_shader_2D.vert";
     std::string f_path = SHADER_DIRECTORY + "/" + "default_shader_2D.frag";
-
     std::shared_ptr<Shader> default_shader_2D = std::make_shared<Shader>(v_path, f_path);
 
     auto ground = std::make_unique<Brick>(800, 50);
@@ -50,14 +49,14 @@ void Scene02::load() {
 //    }
 }
 
-void Scene02::update() {
+void Scene_sample2D_01::update() {
 
 }
 
-void Scene02::render(float delta_time) {
+void Scene_sample2D_01::render(float delta_time) {
     for (auto &obj : objects) {
         if (scene_state != STATE_PAUSE) {
-            EulerSolver::SemiBackwardEuler(obj, objects, delta_time);
+            EulerSolver::ForwardEuler(obj, objects, delta_time);
         }
         obj->set_vp(view, projection);
         obj->set_ortho(ortho);
@@ -65,6 +64,6 @@ void Scene02::render(float delta_time) {
     }
 }
 
-void Scene02::terminate() {
+void Scene_sample2D_01::terminate() {
 
 }

@@ -1,9 +1,12 @@
 #include "Objects3D.h"
 
+// ---------------------------------------- constructors ----------------------------------------
 Ground::Ground(float width, float height) : Plane(), width(width), height(height) { is_fixed = true; }
 
 Ball::Ball(float radius) : Sphere(), radius(radius) {}
 
+
+// ---------------------------------------- updates ----------------------------------------
 void Ground::update() {
     Plane::model = get_model();
     Plane::set_model(Plane::model);
@@ -14,6 +17,8 @@ void Ball::update() {
     Sphere::set_model(Sphere::model);
 }
 
+
+// ---------------------------------------- draws ----------------------------------------
 void Ground::draw() {
     update();
     Plane::draw();
@@ -24,6 +29,8 @@ void Ball::draw() {
     Sphere::draw();
 }
 
+
+// ---------------------------------------- sets ----------------------------------------
 void Ground::set_vp(const Eigen::Matrix4f &view, const Eigen::Matrix4f projection) {
     Plane::set_model(model);
     Plane::set_view(view);
@@ -36,6 +43,8 @@ void Ball::set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) {
     Sphere::set_projection(projection);
 }
 
+
+// ---------------------------------------- gets ----------------------------------------
 Eigen::Matrix4f Ground::get_model() {
     Eigen::Matrix4f translation = Eigen::Matrix4f::Identity();
     translation(0, 3) = x.x();
@@ -57,4 +66,16 @@ Eigen::Matrix4f Ball::get_model() {
     scale(1, 1) = radius;
     scale(2, 2) = radius;
     return translation * rotation * scale;
+}
+
+std::shared_ptr<AABB> &Ground::get_aabb() {
+    update();
+    Ground::update_AABB();
+    return Ground::aabb;
+}
+
+std::shared_ptr<AABB> &Ball::get_aabb() {
+    update();
+    Ball::update_AABB();
+    return Ball::aabb;
 }

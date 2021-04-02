@@ -1,10 +1,7 @@
 #include "EulerSolver.h"
 
 void EulerSolver::ForwardEuler(std::unique_ptr<BasicPhysicalObjects> &obj,
-                               std::vector<std::unique_ptr<BasicPhysicalObjects>> &world_objs, float delta_time) {}
-
-void EulerSolver::SemiBackwardEuler(std::unique_ptr<BasicPhysicalObjects> &obj,
-                                    std::vector<std::unique_ptr<BasicPhysicalObjects>> &world_objs, float delta_time) {
+                               std::vector<std::unique_ptr<BasicPhysicalObjects>> &world_objs, float delta_time) {
     if (!obj->is_fixed) {
 
         float time_step_remaining = delta_time;
@@ -12,6 +9,7 @@ void EulerSolver::SemiBackwardEuler(std::unique_ptr<BasicPhysicalObjects> &obj,
 
         Eigen::Vector3f v_pre, x_pre, v_new, x_new;
         Eigen::Vector3f a;
+
         while (time_step_remaining > epsilon) {
 
             // calc acceleration
@@ -53,12 +51,7 @@ void EulerSolver::SemiBackwardEuler(std::unique_ptr<BasicPhysicalObjects> &obj,
             obj->f = Eigen::Vector3f::Zero();
             time_step_remaining *= optimal_f;
 
-            if (1.f - optimal_f < epsilon ) time_step_remaining = 0;
+            if (1.f - optimal_f < epsilon) time_step_remaining = 0;
         }
     }
-}
-
-void EulerSolver::BackwardEuler(std::unique_ptr<BasicPhysicalObjects> &obj,
-                                std::vector<std::unique_ptr<BasicPhysicalObjects>> &world_objs, float delta_time) {
-
 }

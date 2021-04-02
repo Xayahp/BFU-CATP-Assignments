@@ -4,7 +4,6 @@ void Collision::naive_aabb_collison(const std::unique_ptr<BasicPhysicalObjects> 
                                     const std::vector<std::unique_ptr<BasicPhysicalObjects>> &world_objs,
                                     float delta_x, float delta_y, COLLISION_AXIS &axis, float &optimal_f) {
 
-
     axis = NO_COLLIDED;
     optimal_f = 0.f;
 

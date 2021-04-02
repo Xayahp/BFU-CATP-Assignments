@@ -1,6 +1,7 @@
 #include "BasicShapes.h"
 
 BasicShape::BasicShape(const std::string &name, SHAPE_TYPE type) : name(name), type(type) {
+    /* load buildin model by name, and load corresponding default aabb shader */
     if (type == SHAPE_3D) {
         load_model(std::string(PROJECT_DATA_DIR) + "/3D/" + name + ".obj");
         set_draw_mode(POLYGON);
@@ -12,12 +13,12 @@ BasicShape::BasicShape(const std::string &name, SHAPE_TYPE type) : name(name), t
         load_aabb_shader("default_shader_2D.vert", "default_shader_2D.frag");
         init_aabb(AABB_2D);
     }
-    ortho = Eigen::Matrix4f::Identity();
-    model = Eigen::Matrix4f::Identity();
-    view = Eigen::Matrix4f::Identity();
-    projection = Eigen::Matrix4f::Identity();
-    set_color(0x5a4498);
-//    color = Eigen::Vector4f(0.0f, 0.5f, 0.7f, 1.0f);
+    /* initialize fields */
+    this->ortho = Eigen::Matrix4f::Identity();
+    this->model = Eigen::Matrix4f::Identity();
+    this->view = Eigen::Matrix4f::Identity();
+    this->projection = Eigen::Matrix4f::Identity();
+    set_color(0x5a4498); // set default color
 }
 
 void BasicShape::load_shader(const std::string &vertex_shader_name, const std::string &fragment_shader_name,
