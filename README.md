@@ -1,6 +1,6 @@
 # HinaPE
 
-[![MIT License](https://img.shields.io/badge/licence-MIT-brightgreen)]()    [![Latest Release](https://img.shields.io/badge/Latest_Release-0.7.1-blue)]()
+[![MIT License](https://img.shields.io/badge/licence-MIT-brightgreen)]()    [![Latest Release](https://img.shields.io/github/v/release/XayahP/HinaPE?include_prereleases)]()
 
 ## Introduction
 
