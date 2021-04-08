@@ -7,6 +7,8 @@
 #include "Scene_sample2D_01.h"
 #include "HelloHina.h"
 #include "Assignment_0.h"
+#include "Assignment_1.h"
+#include "Assignment_2.h"
 
 // LOAD INTERFACE
 #include "OpenGL_interface.h"
@@ -27,7 +29,7 @@ int main(int argc, char **argv) {
      *           Load Scenes here !
      * -------------------------------------------------- */
 
-    std::unique_ptr<SceneTEMPLATE> scene = std::make_unique<HelloHina>(OPENGL_INTERFACE::WIDTH, OPENGL_INTERFACE::HEIGHT,true);
+    std::unique_ptr<SceneTEMPLATE> scene = std::make_unique<Assignment_1>(OPENGL_INTERFACE::WIDTH, OPENGL_INTERFACE::HEIGHT, true);
     scene->load();
 
     /* --------------------------------------------------

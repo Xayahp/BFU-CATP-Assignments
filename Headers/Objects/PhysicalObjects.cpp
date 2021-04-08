@@ -7,6 +7,49 @@ BasicPhysicalObjects::BasicPhysicalObjects() : x(Eigen::Vector3f::Zero()), v(Eig
 
 void BasicPhysicalObjects::set_position(const Eigen::Vector3f &pos) {
     this->x = pos;
+    if (!x_inited) {
+        this->x0 = pos;
+        x_inited = true;
+    }
+}
+
+void BasicPhysicalObjects::set_position(float _x, float _y, float _z) {
+    this->x[0] = _x;
+    this->x[1] = _y;
+    this->x[2] = _z;
+    if (!x_inited) {
+        this->x0[0] = _x;
+        this->x0[1] = _y;
+        this->x0[2] = _z;
+        x_inited = true;
+    }
+}
+
+void BasicPhysicalObjects::set_velocity(const Eigen::Vector3f &vel) {
+    this->v = vel;
+    if (!v_inited) {
+        this->v0 = vel;
+        v_inited = true;
+    }
+}
+
+void BasicPhysicalObjects::set_velocity(float _x, float _y, float _z) {
+    this->v[0] = _x;
+    this->v[1] = _y;
+    this->v[2] = _z;
+    if (!v_inited) {
+        this->v0[0] = _x;
+        this->v0[1] = _y;
+        this->v0[2] = _z;
+        v_inited = true;
+    }
+}
+
+void BasicPhysicalObjects::set_mass(float _m) {
+    this->m = _m;
+    if (!m_inited) {
+        this->m0 = _m;
+    }
 }
 
 void BasicPhysicalObjects::rotate(float theta_x_axis, float theta_y_axis, float theta_z_axis) {
@@ -27,4 +70,11 @@ void BasicPhysicalObjects::rotate(float theta_x_axis, float theta_y_axis, float 
             , 0, 0, 1, 0
             , 0, 0, 0, 1;
     this->rotation = rotation_x * rotation_y * rotation_z;
+    if (!r_inited) {
+        this->rotation0 = rotation_x * rotation_y * rotation_z;
+    }
+}
+
+void BasicPhysicalObjects::fix() {
+    this->is_fixed = true;
 }

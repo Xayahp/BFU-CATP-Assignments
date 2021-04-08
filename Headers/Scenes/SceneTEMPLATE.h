@@ -22,10 +22,12 @@ public:
         if (is_2D) {
             ortho(0, 0) = 2.f / float(width);
             ortho(1, 1) = -2.f / float(height);
-            ortho(2, 2) = -1;
-            ortho(0, 3) = -1;
-            ortho(1, 3) = 1;
+            ortho(2, 2) = -1.f;
+            ortho(0, 3) = -1.f;
+            ortho(1, 3) = 1.f;
         }
+        scene_state = STATE_ACTIVE;
+        total_time_elapsed = 0.f;
     }
 
     virtual ~SceneTEMPLATE() = default;
@@ -50,6 +52,8 @@ public:
     std::vector<std::unique_ptr<BasicPhysicalObjects>> init_objects;
 
     Eigen::Matrix4f view, projection, ortho;
+
+    float total_time_elapsed;
 };
 
 #endif //ASSIGNMENTFRAMEWORK_SCENE_H

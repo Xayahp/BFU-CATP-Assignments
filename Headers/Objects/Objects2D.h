@@ -41,7 +41,7 @@ public:
 
     std::shared_ptr<AABB> &get_aabb() override;
 
-private:
+public:
     float width;
     float height;
 };

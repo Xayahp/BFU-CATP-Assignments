@@ -22,7 +22,7 @@ namespace OPENGL_INTERFACE {
     const unsigned HEIGHT = 600;
 
 //    Camera camera({0.0f, 5.0f, 10.0f});
-    Camera camera({0.0f, 0.f, 3.f});
+    Camera camera({0.0f, 0.f, 10.f});
     float lastX = WIDTH / 2.0f;
     float lastY = HEIGHT / 2.0f;
     bool firstMouse = true;

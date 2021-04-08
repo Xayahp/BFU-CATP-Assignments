@@ -56,7 +56,7 @@ void Scene_sample2D_01::update() {
 void Scene_sample2D_01::render(float delta_time) {
     for (auto &obj : objects) {
         if (scene_state != STATE_PAUSE) {
-            EulerSolver::ForwardEuler(obj, objects, delta_time);
+//            EulerSolver::ForwardEuler(obj, objects, delta_time);
         }
         obj->set_vp(view, projection);
         obj->set_ortho(ortho);

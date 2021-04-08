@@ -12,15 +12,25 @@ public:
     virtual ~BasicPhysicalObjects() = default;
 
 public:
-    bool is_fixed;
-
-public:
     Eigen::Vector3f x; // centroid position
     Eigen::Vector3f v; // velocity
     Eigen::Vector3f f; // force
     float ff; // friction
     float m; // mass
     Eigen::Matrix4f rotation; // force
+
+public: // for reset
+    Eigen::Vector3f x0; // original centroid position
+    Eigen::Vector3f v0; // original velocity
+    Eigen::Matrix4f rotation0; // original force
+    float m0; // original mass
+    bool x_inited = false;
+    bool v_inited = false;
+    bool r_inited = false;
+    bool m_inited = false;
+
+public:
+    bool is_fixed;
 
 public:
     virtual void update() = 0;
@@ -30,6 +40,16 @@ public:
     void rotate(float x_axis, float y_axis, float z_axis);
 
     void set_position(const Eigen::Vector3f &pos);
+
+    void set_position(float _x, float _y, float _z);
+
+    void set_velocity(const Eigen::Vector3f &vel);
+
+    void set_velocity(float _x, float _y, float _z);
+
+    void set_mass(float _m);
+
+    void fix();
 
     virtual void set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) = 0;
 

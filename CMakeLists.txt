@@ -27,7 +27,7 @@ file(GLOB OTHER_SOURCES
 file(GLOB SOME_SAMPLE_SCENES "Headers/Scenes/*.h" "Headers/Scenes/*.cpp")
 # -------------------------------------------------------------------------------
 set(ALL_FILES ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES})
-add_executable(AssignmentSample src/main.cpp ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES} Headers/Scenes/Assignment_0.cpp Headers/Scenes/Assignment_0.h)
+add_executable(AssignmentSample src/main.cpp ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES} Headers/Scenes/Assignment_0.cpp Headers/Scenes/Assignment_0.h Headers/Scenes/Assignment_2.cpp Headers/Scenes/Assignment_2.h)
 target_include_directories(AssignmentSample
         PRIVATE
         ${PROJECT_SOURCE_DIR}/include

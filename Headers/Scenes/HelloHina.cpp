@@ -312,7 +312,7 @@ void HelloHina::update() {
 void HelloHina::render(float delta_time) {
     for (auto &obj : objects) {
         if (scene_state != STATE_PAUSE) {
-            EulerSolver::ForwardEuler(obj, objects, delta_time);
+//            EulerSolver::ForwardEuler(obj, objects, delta_time);
         }
         obj->set_vp(view, projection);
         obj->set_ortho(ortho);
@@ -320,7 +320,7 @@ void HelloHina::render(float delta_time) {
     }
     for (auto &firework : fireworks->pizzas) {
         if (scene_state != STATE_PAUSE) {
-            EulerSolver::ForwardEuler(firework, objects, delta_time);
+//            EulerSolver::ForwardEuler(firework, objects, delta_time);
         }
         firework->set_vp(view, projection);
         firework->set_ortho(ortho);
