@@ -1,15 +1,15 @@
 #include "Objects3D.h"
 
 // ---------------------------------------- constructors ----------------------------------------
-Ground::Ground(float width, float height) : Plane(), width(width), height(height) { is_fixed = true; }
+Box::Box(float width, float height, float depth) : Cube(), width(width), height(height), depth(depth) {}
 
 Ball::Ball(float radius) : Sphere(), radius(radius) {}
 
 
 // ---------------------------------------- updates ----------------------------------------
-void Ground::update() {
-    Plane::model = get_model();
-    Plane::set_model(Plane::model);
+void Box::update() {
+    Cube::model = get_model();
+    Cube::set_model(Cube::model);
 }
 
 void Ball::update() {
@@ -19,9 +19,9 @@ void Ball::update() {
 
 
 // ---------------------------------------- draws ----------------------------------------
-void Ground::draw() {
+void Box::draw() {
     update();
-    Plane::draw();
+    Cube::draw();
 }
 
 void Ball::draw() {
@@ -31,10 +31,10 @@ void Ball::draw() {
 
 
 // ---------------------------------------- sets ----------------------------------------
-void Ground::set_vp(const Eigen::Matrix4f &view, const Eigen::Matrix4f projection) {
-    Plane::set_model(model);
-    Plane::set_view(view);
-    Plane::set_projection(projection);
+void Box::set_vp(const Eigen::Matrix4f &view, const Eigen::Matrix4f projection) {
+    Cube::set_model(model);
+    Cube::set_view(view);
+    Cube::set_projection(projection);
 }
 
 void Ball::set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) {
@@ -45,14 +45,15 @@ void Ball::set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) {
 
 
 // ---------------------------------------- gets ----------------------------------------
-Eigen::Matrix4f Ground::get_model() {
+Eigen::Matrix4f Box::get_model() {
     Eigen::Matrix4f translation = Eigen::Matrix4f::Identity();
     translation(0, 3) = x.x();
     translation(1, 3) = x.y();
     translation(2, 3) = x.z();
     Eigen::Matrix4f scale = Eigen::Matrix4f::Identity();
-    scale(0, 0) = height;
-    scale(2, 2) = width;
+    scale(0, 0) = width / 2.f;
+    scale(1, 1) = height / 2.f;
+    scale(2, 2) = depth / 2.f;
     return translation * rotation * scale;
 }
 
@@ -68,10 +69,10 @@ Eigen::Matrix4f Ball::get_model() {
     return translation * rotation * scale;
 }
 
-std::shared_ptr<AABB> &Ground::get_aabb() {
+std::shared_ptr<AABB> &Box::get_aabb() {
     update();
-    Ground::update_AABB();
-    return Ground::aabb;
+    Box::update_AABB();
+    return Box::aabb;
 }
 
 std::shared_ptr<AABB> &Ball::get_aabb() {

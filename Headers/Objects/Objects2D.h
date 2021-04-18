@@ -5,9 +5,9 @@
 
 #include "PhysicalObjects.h"
 
-class Wall : public Line, public BasicPhysicalObjects {
+class Edge : public Line, public BasicPhysicalObjects {
 public:
-    Wall(float width);
+    Edge(float width);
 
     void update() override;
 
@@ -21,8 +21,10 @@ public:
 
     std::shared_ptr<AABB> &get_aabb() override;
 
-private:
+public:
     float width;
+    Eigen::Vector3f start;
+    Eigen::Vector3f end;
 };
 
 class Brick : public Rectangle, public BasicPhysicalObjects {

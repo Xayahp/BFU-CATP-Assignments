@@ -8,19 +8,22 @@
 
 #include <string>
 
-enum SHAPE_TYPE {
+enum SHAPE_TYPE
+{
     SHAPE_2D,
     SHAPE_3D
 };
 
-enum AABB_TYPE {
+enum AABB_TYPE
+{
     AABB_2D,
     AABB_3D
 };
 
 class AABB;
 
-class BasicShape : public Model {
+class BasicShape : public Model
+{
 protected: // -------------------- CONSTRUCTOR(S) --------------------
     explicit BasicShape(const std::string &name, SHAPE_TYPE type = SHAPE_3D);
 
@@ -40,7 +43,7 @@ public: // -------------------- DRAW INTERFACE --------------------
 
     void set_color(const Eigen::Vector4f &RGBA);
 
-    void set_color(const int HEX, float opacity = 1.f);
+    void set_color(int HEX, float opacity = 1.f);
 
     /* set shader paras */
     void set_projection(const Eigen::Matrix4f &_projection);
@@ -50,9 +53,9 @@ public: // -------------------- DRAW INTERFACE --------------------
     void set_model(const Eigen::Matrix4f &_model);
 
 public:
+    std::string name;
     bool DRAW_AABB = false;
     SHAPE_TYPE type;
-    const std::string name;
     std::shared_ptr<Shader> shader;
     Eigen::Vector4f color;
     Eigen::Matrix4f model, view, projection;
@@ -74,7 +77,8 @@ public: // -------------------- AABB INTERFACE --------------------
 
 
 // ------------------------------ AABB CLASS ------------------------------
-class AABB {
+class AABB
+{
 public:
     AABB(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax, AABB_TYPE type = AABB_3D);
 

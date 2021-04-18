@@ -1,7 +1,7 @@
 #include "Objects2D.h"
 
 // ---------------------------------------- constructors ----------------------------------------
-Wall::Wall(float width) : Line(), width(width) {}
+Edge::Edge(float width) : Line(), width(width) {}
 
 Brick::Brick(float width, float height) : Rectangle(), width(width), height(height) {}
 
@@ -9,7 +9,7 @@ Pizza::Pizza(float radius) : Circle(), radius(radius) {}
 
 
 // ---------------------------------------- updates ----------------------------------------
-void Wall::update() {
+void Edge::update() {
     Line::model = get_model();
     Line::set_model(Line::model);
 }
@@ -26,7 +26,7 @@ void Pizza::update() {
 
 
 // ---------------------------------------- draws ----------------------------------------
-void Wall::draw() {
+void Edge::draw() {
     update();
     Line::draw();
 }
@@ -43,7 +43,7 @@ void Pizza::draw() {
 
 
 // ---------------------------------------- sets ----------------------------------------
-void Wall::set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) {
+void Edge::set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) {
     Line::set_model(model);
     Line::set_view(Eigen::Matrix4f::Identity());
     Line::set_projection(Eigen::Matrix4f::Identity());
@@ -61,8 +61,8 @@ void Pizza::set_vp(const Eigen::Matrix4f &view, Eigen::Matrix4f projection) {
     Circle::set_projection(Eigen::Matrix4f::Identity());
 }
 
-void Wall::set_ortho(const Eigen::Matrix4f &ortho) {
-    Wall::ortho = ortho;
+void Edge::set_ortho(const Eigen::Matrix4f &ortho) {
+    Edge::ortho = ortho;
 }
 
 void Brick::set_ortho(const Eigen::Matrix4f &ortho) {
@@ -76,7 +76,7 @@ void Pizza::set_ortho(const Eigen::Matrix4f &ortho) {
 
 // ---------------------------------------- gets ----------------------------------------
 
-Eigen::Matrix4f Wall::get_model() {
+Eigen::Matrix4f Edge::get_model() {
     Eigen::Matrix4f translation = Eigen::Matrix4f::Identity();
     translation(0, 3) = x.x();
     translation(1, 3) = x.y();
@@ -105,10 +105,10 @@ Eigen::Matrix4f Pizza::get_model() {
     return translation * rotation * scale;
 }
 
-std::shared_ptr<AABB> &Wall::get_aabb() {
+std::shared_ptr<AABB> &Edge::get_aabb() {
     update();
-    Wall::update_AABB();
-    return Wall::aabb;
+    Edge::update_AABB();
+    return Edge::aabb;
 }
 
 std::shared_ptr<AABB> &Brick::get_aabb() {

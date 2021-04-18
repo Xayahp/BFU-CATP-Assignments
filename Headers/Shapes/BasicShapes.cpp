@@ -69,9 +69,9 @@ void BasicShape::set_color(const Eigen::Vector4f &RGBA) {
 }
 
 void BasicShape::set_color(const int HEX, float opacity) {
-    this->color[0] = ((HEX >> 16) & 0xFF) / 255.f;
-    this->color[1] = ((HEX >> 8) & 0xFF) / 255.f;
-    this->color[2] = ((HEX) & 0xFF) / 255.f;
+    this->color[0] = static_cast<float>(((HEX >> 16) & 0xFF)) / 255.f;
+    this->color[1] = static_cast<float>(((HEX >> 8) & 0xFF)) / 255.f;
+    this->color[2] = static_cast<float>(((HEX) & 0xFF)) / 255.f;
     this->color[3] = opacity;
 }
 

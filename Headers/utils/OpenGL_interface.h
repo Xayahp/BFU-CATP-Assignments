@@ -12,9 +12,10 @@
 
 #include "Camera.h"
 
-namespace OPENGL_INTERFACE {
+namespace OPENGL_INTERFACE
+{
 
-    bool scene_state = 1;
+    bool scene_state = true;
 
     bool reset = false;
 
@@ -22,7 +23,7 @@ namespace OPENGL_INTERFACE {
     const unsigned HEIGHT = 600;
 
 //    Camera camera({0.0f, 5.0f, 10.0f});
-    Camera camera({0.0f, 0.f, 10.f});
+    Camera camera({0.0f, 5.f, 20.f});
     float lastX = WIDTH / 2.0f;
     float lastY = HEIGHT / 2.0f;
     bool firstMouse = true;
@@ -36,7 +37,8 @@ namespace OPENGL_INTERFACE {
     std::vector<Eigen::Vector2f> mouse_input_points;
     bool printed = false;
 
-    static Eigen::Matrix4f GET_PROJECTION_MATRIX() {
+    static Eigen::Matrix4f GET_PROJECTION_MATRIX()
+    {
         glm::mat4 p = glm::perspective(glm::radians(OPENGL_INTERFACE::camera.Zoom),
                                        (float) OPENGL_INTERFACE::WIDTH / (float) OPENGL_INTERFACE::HEIGHT, 0.1f,
                                        100.0f);
@@ -49,7 +51,8 @@ namespace OPENGL_INTERFACE {
         return projection;
     }
 
-    static Eigen::Matrix4f GET_VIEW_MATRIX() {
+    static Eigen::Matrix4f GET_VIEW_MATRIX()
+    {
         glm::mat4 v = OPENGL_INTERFACE::camera.GetViewMatrix();
         Eigen::Matrix4f view;
 
@@ -68,7 +71,8 @@ namespace OPENGL_INTERFACE {
 
     static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
-    static void OPENGL_INIT(GLFWwindow *&window) {
+    static void OPENGL_INIT(GLFWwindow *&window)
+    {
 
         // initialize GLFW
         glfwInit();
@@ -80,7 +84,8 @@ namespace OPENGL_INTERFACE {
 #endif
 
         window = glfwCreateWindow(WIDTH, HEIGHT, WINDOW_NAME.c_str(), nullptr, nullptr);
-        if (window == nullptr) {
+        if (window == nullptr)
+        {
             std::cout << "Failed to create GLFW window." << std::endl;
             glfwTerminate();
         }
@@ -92,10 +97,11 @@ namespace OPENGL_INTERFACE {
         glfwSetScrollCallback(window, scroll_callback);
         glfwSetMouseButtonCallback(window, mouse_button_callback);
 
-//        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // initialize GLAD
-        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+        {
             std::cout << "Failed to initialize GLAD." << std::endl;
             glfwTerminate(); // This line isn't in the official source code, but I think that it should be added here.
         }
@@ -103,7 +109,8 @@ namespace OPENGL_INTERFACE {
         glEnable(GL_DEPTH_TEST);
     }
 
-    static void PROCESS_INPUT(GLFWwindow *&window) {
+    static void PROCESS_INPUT(GLFWwindow *&window)
+    {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -124,23 +131,29 @@ namespace OPENGL_INTERFACE {
             reset = true;
     }
 
-    static void OPENGL_CLEAR_BUFFER() {
+    static void OPENGL_CLEAR_BUFFER()
+    {
         glClearColor(1.f, 1.f, 1.f, 1.f);
+//        glClearColor(50.f / 255.f, 50.f / 255.f, 60.f / 255.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT + GL_DEPTH_BUFFER_BIT);
     }
 
-    static void OPENGL_SHUTDOWN(GLFWwindow *&window) {
+    static void OPENGL_SHUTDOWN(GLFWwindow *&window)
+    {
         glfwDestroyWindow(window);
         glfwTerminate();
     }
 
 // ------------------------------ callback functions ------------------------------
-    static void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+    {
         glViewport(0, 0, width, height);
     }
 
-    static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+    static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
+    {
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+        {
             double xpos, ypos;
             //getting cursor position
             glfwGetCursorPos(window, &xpos, &ypos);
@@ -149,14 +162,17 @@ namespace OPENGL_INTERFACE {
             mouse_input_points.emplace_back(Eigen::Vector2f(xpos, ypos));
             printed = false;
         }
-        if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+        {
             mouse_input_points.clear();
             std::cout << "CLEAR!" << std::endl;
         }
     }
 
-    static void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
-        if (firstMouse) {
+    static void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+    {
+        if (firstMouse)
+        {
             lastX = xpos;
             lastY = ypos;
             firstMouse = false;
@@ -171,7 +187,8 @@ namespace OPENGL_INTERFACE {
         camera.ProcessMouseMovement(xoffset, yoffset);
     }
 
-    static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+    static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+    {
         camera.ProcessMouseScroll(yoffset);
     }
 }

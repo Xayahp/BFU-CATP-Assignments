@@ -15,9 +15,9 @@ public:
     Eigen::Vector3f x; // centroid position
     Eigen::Vector3f v; // velocity
     Eigen::Vector3f f; // force
-    float ff; // friction
     float m; // mass
-    Eigen::Matrix4f rotation; // force
+    float ff; // friction args
+    Eigen::Matrix4f rotation; // rotation mat
 
 public: // for reset
     Eigen::Vector3f x0; // original centroid position

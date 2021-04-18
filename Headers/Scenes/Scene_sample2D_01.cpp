@@ -27,7 +27,7 @@ void Scene_sample2D_01::load() {
     pizza->set_position(Eigen::Vector3f(600, 300, 0.f));
     pizza->v = Eigen::Vector3f(-100, 0, 0);
 
-    auto wall = std::make_unique<Wall>(800);
+    auto wall = std::make_unique<Edge>(800);
     wall->shader = default_shader_2D;
     wall->set_position(Eigen::Vector3f(400, 575, 0.f));
     wall->is_fixed = true;

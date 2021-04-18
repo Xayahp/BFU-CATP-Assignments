@@ -1,4 +1,4 @@
-# -------------------------------------------------------------------------------
+	# -------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.5)
 project(AssignmentFramework)
 set(CMAKE_CXX_FLAGS "-std=c++14")
@@ -13,7 +13,7 @@ option(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/assimp-5.0.1)
 
 # -------------------------------------------------------------------------------
-file(GLOB PROJECT_HEADERS "Headers/*.h" "Headers/*.hpp" "Headers/*.cpp" "Headers/Shapes/*.h" "Headers/Shapes/*.hpp" "Headers/Shapes/*.cpp" "Headers/Objects/*.h" "Headers/Objects/*.hpp" "Headers/Objects/*.cpp" "Headers/Solvers/*.h" "Headers/Solvers/*.hpp" "Headers/Solvers/*.cpp" "Headers/ParticleSystem/*.h" "Headers/ParticleSystem/*.hpp" "Headers/ParticleSystem/*.cpp" "Headers/Collision/*.h" "Headers/Collision/*.hpp" "Headers/Collision/*.cpp")
+file(GLOB PROJECT_HEADERS "Headers/*.h" "Headers/*.hpp" "Headers/*.cpp" "Headers/Shapes/*.h" "Headers/Shapes/*.hpp" "Headers/Shapes/*.cpp" "Headers/Objects/*.h" "Headers/Objects/*.hpp" "Headers/Objects/*.cpp" "Headers/Solvers/*.h" "Headers/Solvers/*.hpp" "Headers/Solvers/*.cpp" "Headers/ParticleSystem/*.h" "Headers/ParticleSystem/*.hpp" "Headers/ParticleSystem/*.cpp" "Headers/Collision/*.h" "Headers/Collision/*.hpp" "Headers/Collision/*.cpp" "Headers/MassSpringSystem/*.h" "Headers/MassSpringSystem/*.hpp" "Headers/MassSpringSystem/*.cpp" "Headers/ClothSimulation/*.h" "Headers/ClothSimulation/*.hpp" "Headers/ClothSimulation/*.cpp")
 file(GLOB PROJECT_UTILS "Headers/utils/*.h" "Headers/utils/*.hpp" "Headers/utils/*.cpp")
 file(GLOB OTHER_SOURCES
         "include/glad/glad.c"
@@ -27,7 +27,7 @@ file(GLOB OTHER_SOURCES
 file(GLOB SOME_SAMPLE_SCENES "Headers/Scenes/*.h" "Headers/Scenes/*.cpp")
 # -------------------------------------------------------------------------------
 set(ALL_FILES ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES})
-add_executable(AssignmentSample src/main.cpp ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES} Headers/Scenes/Assignment_0.cpp Headers/Scenes/Assignment_0.h Headers/Scenes/Assignment_2.cpp Headers/Scenes/Assignment_2.h)
+add_executable(AssignmentSample src/main.cpp ${PROJECT_HEADERS} ${PROJECT_UTILS} ${OTHER_SOURCES} ${SOME_SAMPLE_SCENES})
 target_include_directories(AssignmentSample
         PRIVATE
         ${PROJECT_SOURCE_DIR}/include
@@ -35,6 +35,8 @@ target_include_directories(AssignmentSample
         ${PROJECT_SOURCE_DIR}/Headers/Shapes
         ${PROJECT_SOURCE_DIR}/Headers/Objects
         ${PROJECT_SOURCE_DIR}/Headers/ParticleSystem
+        ${PROJECT_SOURCE_DIR}/Headers/MassSpringSystem
+        ${PROJECT_SOURCE_DIR}/Headers/ClothSimulation
         ${PROJECT_SOURCE_DIR}/Headers/Solvers
         ${PROJECT_SOURCE_DIR}/Headers/Collision
         ${PROJECT_SOURCE_DIR}/Headers/Scenes

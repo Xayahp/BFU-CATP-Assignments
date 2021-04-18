@@ -10,7 +10,7 @@
 class Fireworks2D : public PointParticleGenerator {
 public:
     Fireworks2D(std::shared_ptr<Shader> shader) : PointParticleGenerator(Eigen::Vector3f(400, 300, 0)) {
-        for (int i = 0; i < 100; ++i) {
+        for (int i = 0; i < 20; ++i) {
             Particle p = rand_one_time();
             std::unique_ptr<Pizza> new_p = std::make_unique<Pizza>(5);
             new_p->shader = shader;
